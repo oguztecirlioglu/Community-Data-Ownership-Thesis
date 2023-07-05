@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-05T10:18:48.136Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="nHTml0A7i_DMg5LRm1Su" version="21.5.0" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-05T12:34:15.684Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="yE63cuPd3cA6Ylt1wLZQ" version="21.5.0" type="github">
   <diagram name="Page-1" id="aklOrfjd24qqs5W9E0Lq">
-    <mxGraphModel dx="4273" dy="2278" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1743" dy="2574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -131,19 +131,19 @@
         <mxCell id="0mtXq6aFVz5rFMkoWRVZ-215" value="&lt;span style=&quot;background-color: rgb(0, 0, 0);&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot; color=&quot;#ffffff&quot;&gt;&lt;b&gt;Other Gateways&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;fontFamily=Helvetica;fontColor=default;container=0;" vertex="1" parent="0mtXq6aFVz5rFMkoWRVZ-219">
           <mxGeometry x="523.6297297297298" y="1007.2222222222222" width="160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="0mtXq6aFVz5rFMkoWRVZ-210" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=1;labelBackgroundColor=default;strokeColor=default;strokeWidth=5;fontFamily=Helvetica;fontSize=11;fontColor=default;curved=1;elbow=vertical;fillColor=#ffffff;" edge="1" parent="0mtXq6aFVz5rFMkoWRVZ-219">
-          <mxGeometry width="100" height="100" relative="1" as="geometry">
-            <mxPoint x="760.872972972973" y="687.469135802469" as="sourcePoint" />
-            <mxPoint x="467.14324324324326" y="424.81481481481484" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="0mtXq6aFVz5rFMkoWRVZ-211" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=1;labelBackgroundColor=default;strokeColor=default;strokeWidth=5;fontFamily=Helvetica;fontSize=11;fontColor=default;curved=1;elbow=vertical;fillColor=#FFFFFF;gradientColor=none;" edge="1" parent="0mtXq6aFVz5rFMkoWRVZ-219">
           <mxGeometry width="100" height="100" relative="1" as="geometry">
-            <mxPoint x="463.1891891891892" y="687.469135802469" as="sourcePoint" />
-            <mxPoint x="756.918918918919" y="424.81481481481484" as="targetPoint" />
+            <mxPoint x="388.7291891891891" y="747.5891358024692" as="sourcePoint" />
+            <mxPoint x="838.73" y="348.6999999999998" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0mtXq6aFVz5rFMkoWRVZ-213" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;b&gt;Gateways forming Hyperledger Fabric Network &amp;amp; IPFS Cluster.&amp;nbsp;&lt;/b&gt;&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontFamily=Helvetica;fontColor=default;container=0;" vertex="1" connectable="0" parent="0mtXq6aFVz5rFMkoWRVZ-211">
+        <mxCell id="0mtXq6aFVz5rFMkoWRVZ-223" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=1;labelBackgroundColor=default;strokeColor=default;strokeWidth=5;fontFamily=Helvetica;fontSize=11;fontColor=default;curved=1;elbow=vertical;fillColor=#FFFFFF;gradientColor=none;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="1505.51" y="2319.0091358024692" as="sourcePoint" />
+            <mxPoint x="1055.509189189189" y="1920.12" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0mtXq6aFVz5rFMkoWRVZ-224" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;b&gt;Gateways forming Hyperledger Fabric Network &amp;amp; IPFS Cluster.&amp;nbsp;&lt;/b&gt;&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontFamily=Helvetica;fontColor=default;container=0;" vertex="1" connectable="0" parent="0mtXq6aFVz5rFMkoWRVZ-223">
           <mxGeometry x="-0.0144" y="-6" relative="1" as="geometry">
             <mxPoint x="8" y="139" as="offset" />
           </mxGeometry>
