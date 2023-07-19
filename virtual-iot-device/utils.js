@@ -1,11 +1,14 @@
 function envOrDefault(KEY, defaultValue) {
-  return process.env.KEY || defaultValue;
+  return process.env?.[KEY] || defaultValue;
 }
 
 /** Generate random AQM data.
+ * Returns a JSON that has readings for:
+ * PM 2.5, PM10, TVOC, Ozone, Nitrogen Dioxide, Sulfur Dioxide, Carbon Monoxide
  * @param {number} randomnessAmount - A number in [-5, 25] that determines how random the fake readings are.
+ * @param {String} deviceName - Name of the IoT device producing the data.
  */
-function generateRandomData(randomnessAmount) {
+function generateRandomData(randomnessAmount, deviceName) {
   if (randomnessAmount < -5) randomnessAmount = -5;
   if (randomnessAmount > 25) randomnessAmount = 25;
 
@@ -19,6 +22,7 @@ function generateRandomData(randomnessAmount) {
   const sulfur_dioxide_Amount = generateRandomness(35, 5);
   const carbon_monoxide_Amount = generateRandomness(30, 5);
 
+  // WHO Tolerable / target values for pollutants:
   //pm2.5 = 10µg/m3
   //pm10=15µg/m3
   //tvoc=300µg/m3
@@ -29,9 +33,10 @@ function generateRandomData(randomnessAmount) {
   // from https://www.c40knowledgehub.org/s/article/WHO-Air-Quality-Guidelines?language=en_US
   // for tvoc=https://environment.co/acceptable-voc-levels-ppm/#:~:text=But%20there%20are%20VOC%20level,zero%20ppm%20to%200.065%20ppm.
   // tvoc limit=https://asbp.org.uk/wp-content/uploads/2020/03/Sani-Dimitroulopoulou-Public-Health-England-ASBP-Healthy-Buildings-2020.pdf
-  // , vocs,  humidity, temperature,
 
   return {
+    time: new Date().toISOString(),
+    deviceName: deviceName,
     temperature: {
       unit: "celsius",
       amount: temperature_Amount,
@@ -47,7 +52,7 @@ function generateRandomData(randomnessAmount) {
     nitrogen_dioxide: { unit: "µg/m3", amount: nitrogen_dioxide_Amount },
     sulfur_dioxide: { unit: "µg/m3", amount: sulfur_dioxide_Amount },
     carbon_monoxide: { unit: "µg/m3", amount: carbon_monoxide_Amount },
-  }; // Return the data as an object
+  };
 }
 
 /*

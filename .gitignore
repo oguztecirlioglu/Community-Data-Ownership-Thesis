@@ -1,2 +1,6 @@
+# Ignore all node_modules
 node_modules
 **/node_modules
+
+# Ignore locally stored IoT data as it is junk data that doesn't need to go on Git.
+*localGateway.js
