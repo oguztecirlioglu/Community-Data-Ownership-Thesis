@@ -4,12 +4,16 @@
   "description": "A virtual IoT device that will generate random data and push it to an HTTP endpoint",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generateDocs": "./node_modules/.bin/jsdoc *.js"
   },
   "author": "Oguz Tecirlioglu <ot398@bath.ac.uk>",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jsdoc": "^4.0.2"
   }
 }
