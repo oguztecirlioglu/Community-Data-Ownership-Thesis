@@ -20,7 +20,6 @@ function processDataInput(data, dailyStorage) {
       return {
         status_code: 1,
         message: `ERROR: Missing value for key:${key} in the data recieved, returning original dailyStorage object.`,
-        newDailyStorage: data,
       };
   }
 
@@ -78,7 +77,7 @@ function loadFileAsObject(fileName) {
 function deleteFile(fileName) {
   fs.unlink(fileName, (err) => {
     if (err) {
-      console.error(`Error deleting file '${fileName}':`, err.message);
+      console.log(`Error deleting file '${fileName}':`, err.message);
     } else {
       console.log(`File '${fileName}' has been successfully deleted.`);
     }

@@ -9,7 +9,7 @@ const API_ENDPOINT = utils.envOrDefault("VIRTUAL_DEVICE_API_ENDPOINT", "/api/dat
 const API_PORT = utils.envOrDefault("LOCAL_GATEWAY_PORT", 7500);
 
 /** @global */
-const INTERVAL_SECONDS = utils.envOrDefault("VIRTUAL_DEVICE_INTERVAL_SECONDS", 10);
+const INTERVAL_SECONDS = utils.envOrDefault("VIRTUAL_DEVICE_INTERVAL_SECONDS", 5);
 
 /** @global */
 const PORT = utils.envOrDefault("VIRTUAL_DEVICE_PORT", 3000);
@@ -46,7 +46,7 @@ async function sendData() {
 
 // NodeJS equivalent of creating a "main" method.
 if (require.main === module) {
-  setInterval(sendData, INTERVAL_SECONDS * 250);
+  setInterval(sendData, INTERVAL_SECONDS * 1000);
 
   // Created for testing purposes, the virtual device makes a http post request to itself
   // which gets appended to an array.

@@ -6,9 +6,12 @@ const ipfsUtils = require("./ipfsUtils");
 const app = express();
 app.use(express.json());
 
-/** @global */
+const UPDATE_POLL_FREQUENCY = utils.envOrDefault("LOCAL_GATEWAY_UPDATE_POLL_FREQUENCY", 10);
 const PORT = utils.envOrDefault("LOCAL_GATEWAY_PORT", 7500);
 const JSON_PATH = utils.envOrDefault("LOCAL_GATEWAY_JSON_PATH", "./localStorage.json");
+const IPFS_API_PORT = utils.envOrDefault("IPFS_API_PORT", 5001);
+const IPFS_HTTP_GATEWAY_PORT = utils.envOrDefault("IPFS_HTTP_GATEWAY_PORT", 8080);
+const IPFSCLUSTER_API_PORT = utils.envOrDefault("IPFSCLUSTER_API_PORT", 9094);
 
 /* 
 The previouslySavedData is only to be saved when the app closes or crashes. Once it's loaded, we only use the in memory object.
@@ -25,15 +28,75 @@ const dailyStorage = dataToKeep;
 
 utils.deleteFile(JSON_PATH);
 
-ipfsUtils.uploadToIPFS(dataToUpload);
-//call method to upload remaining data here.
+(async () => {
+  for (const [key, value] of Object.entries(dataToUpload)) {
+    const dataDate = value[0]?.time.substring(0, 10);
+    const deviceName = key;
+
+    const dataEntry = {
+      device_name: deviceName,
+      date: dataDate,
+      data: value,
+    };
+
+    const { status, cid } = await ipfsUtils.uploadToIPFS(
+      dataEntry,
+      IPFSCLUSTER_API_PORT,
+      IPFS_HTTP_GATEWAY_PORT
+    );
+
+    if (status === 0) {
+      console.log(`Data successfully uploaded to IPFS, CID is: ${cid}`);
+    } else if (status !== 0) {
+      console.log(`Error uploading data to IPFS, error is:${cid}`);
+    }
+  }
+})();
+
+async function dataUploadLifecycle(dailyStorage) {
+  console.log(
+    "Polling for updates to the stored data, will push yesterdays data to the IPFS and Hyperledger Network."
+  );
+
+  const { keep: _, upload: dataToUpload } = utils.filterData(dailyStorage);
+
+  for (const [key, value] of Object.entries(dataToUpload)) {
+    const dataDate = value[0]?.time.substring(0, 10);
+    const deviceName = key;
+
+    const dataEntry = {
+      device_name: deviceName,
+      date: dataDate,
+      data: value,
+    };
+
+    const { status, cid } = await ipfsUtils.uploadToIPFS(
+      dataEntry,
+      IPFSCLUSTER_API_PORT,
+      IPFS_HTTP_GATEWAY_PORT
+    );
+
+    if (status === 0) {
+      console.log(`Data successfully uploaded to IPFS for device ${deviceName}, CID is: ${cid}`);
+    } else if (status !== 0) {
+      console.log(`Error uploading data to IPFS, error is:${cid}`);
+    }
+
+    delete dailyStorage[key];
+
+    // upload cid to hf as org asset.
+  }
+}
 
 // NodeJS equivalent of creating a "main" method.
 if (require.main == module) {
+  const poller = setInterval(() => dataUploadLifecycle(dailyStorage), UPDATE_POLL_FREQUENCY * 1000);
+
   app.post("/api/dataInput", (req, res) => {
     let { status_code, message } = utils.processDataInput(req.body, dailyStorage);
 
-    if (status_code != 0) res.status(406).send("Error comitting IoT Data, error is:" + message);
+    if (status_code != 0)
+      return res.status(406).send("Error comitting IoT Data, error is:" + message);
 
     res.status(200).send("Data submitted successfully");
   });

@@ -1,0 +1,50 @@
+version: "3.4"
+
+# This is an example docker-compose file to test an IPFS Cluster
+
+# It runs 1 ipfs-cluster container, and 1 ipfs kubo implementation.
+# "docker exec -it cluster sh" can be used to enter the cluster container.
+# The clusters API is exposed on the localhost
+
+services:
+  ##################################################################################
+  ## Cluster Peer ################################################################
+  ##################################################################################
+
+  ipfs:
+    container_name: ipfs
+    image: ipfs/kubo:release
+    ports:
+      - "8080:8080" # ipfs gateway - expose if needed/wanted
+      - "5001:5001" # ipfs api - expose if needed/wanted
+    #     - "4001:4001" # ipfs swarm - expose if needed/wanted
+    volumes:
+      - ./staging:/export
+      - ./compose/ipfs:/data/ipfs
+      - ./kubo-startup-script.sh:/container-init.d/kubo-startup-script.sh
+
+    environment:
+      - IPFS_PROFILE=lowpower
+
+  cluster:
+    container_name: cluster
+    image: ipfs/ipfs-cluster:latest
+    depends_on:
+      - ipfs
+    environment:
+      CLUSTER_PEERNAME: cluster
+      CLUSTER_SECRET: ${CLUSTER_SECRET} # From shell variable if set
+      CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs/tcp/5001
+      CLUSTER_CRDT_TRUSTEDPEERS: "*" # Trust all peers in Cluster
+      CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094 # Expose API
+      CLUSTER_MONITORPINGINTERVAL: 2s # Speed up peer discovery
+    ports:
+      # Open API port (allows ipfs-cluster-ctl usage on host)
+      - "127.0.0.1:9094:9094"
+      # The cluster swarm port would need  to be exposed if this container
+      # was to connect to cluster peers on other hosts.
+      # But this is just a testing cluster.
+      # - "9095:9095" # Cluster IPFS Proxy endpoint
+      # - "9096:9096" # Cluster swarm endpoint
+    volumes:
+      - ./compose/cluster:/data/ipfs-cluster

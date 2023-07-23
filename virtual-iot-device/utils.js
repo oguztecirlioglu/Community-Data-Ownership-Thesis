@@ -35,7 +35,8 @@ function generateRandomData(randomnessAmount, deviceName) {
   // tvoc limit=https://asbp.org.uk/wp-content/uploads/2020/03/Sani-Dimitroulopoulou-Public-Health-England-ASBP-Healthy-Buildings-2020.pdf
 
   return {
-    time: new Date().toISOString(),
+    // time: new Date().toISOString(),
+    time: new Date(Date.now() - 86400000).toISOString(),
     deviceName: deviceName,
     temperature: {
       unit: "celsius",
