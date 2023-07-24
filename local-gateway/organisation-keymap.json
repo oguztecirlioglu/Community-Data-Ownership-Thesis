@@ -1,0 +1,18 @@
+{
+  "Virtual_IoT_Device_1255_2023-07-23": {
+    "cid": "QmWVvknvDCKAJkKCkHxL2g4r34mF2UnhFfJnKaf4GhmJCa",
+    "assetName": "Virtual_IoT_Device_1255_2023-07-23",
+    "symmetricKey": {
+      "type": "Buffer",
+      "data": [
+        156, 207, 14, 68, 210, 141, 30, 48, 42, 152, 254, 45, 226, 252, 155, 4, 203, 8, 224, 43,
+        180, 41, 40, 37, 222, 252, 55, 92, 18, 250, 101, 53
+      ]
+    }
+  },
+  "Virtual_IoT_Device_8072_2023-07-23": {
+    "cid": "QmWAE9oFbKofDEjeYdoEjk5TCzpu7cPUzdzAaLahq38RB8",
+    "assetName": "Virtual_IoT_Device_8072_2023-07-23",
+    "symmetricKey": "FOPoVJhUUf17kxTT0D2gDB9pxZWCS3K/1FY7YqfKtjA="
+  }
+}

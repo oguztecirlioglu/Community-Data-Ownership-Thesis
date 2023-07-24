@@ -136,6 +136,31 @@ function isTodaysDate(date) {
   return date === todaysDate;
 }
 
+/**
+ *
+ * @param {String} cid
+ * @param {String} assetName
+ * @param {*} symmetricKey
+ * @param {String} path
+ */
+function saveToLocalKeyMap(cid, assetName, symmetricKey, path) {
+  if (path == null) {
+    path = "./organisation-keymap.json";
+  }
+
+  symmetricKey = symmetricKey.toString("base64");
+
+  try {
+    let existingKeyMapRaw = fs.readFileSync(path);
+    let existingKeyMap = JSON.parse(existingKeyMapRaw);
+    existingKeyMap[assetName] = { cid, assetName, symmetricKey };
+    fs.writeFileSync(path, JSON.stringify(existingKeyMap));
+  } catch {
+    let existingKeyMap = { [assetName]: { cid, assetName, symmetricKey } };
+    fs.writeFileSync(path, JSON.stringify(existingKeyMap));
+  }
+}
+
 const utils = {
   processDataInput,
   envOrDefault,
@@ -144,6 +169,7 @@ const utils = {
   deleteFile,
   keepPreviousData,
   filterData,
+  saveToLocalKeyMap,
 };
 
 module.exports = utils;

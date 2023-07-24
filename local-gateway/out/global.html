@@ -94,15 +94,101 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<h4 class="name" id="PORT"><span class="type-signature">(constant) </span>PORT<span class="type-signature"></span></h4>
+
+    
+
+    
+    <h4 class="name" id="decryptToPlainText"><span class="type-signature"></span>decryptToPlainText<span class="signature">(ciphertext, key)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
 
 
 
 
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ciphertext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -138,7 +224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="localGateway.js.html">localGateway.js</a>, <a href="localGateway.js.html#line10">line 10</a>
+        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line76">line 76</a>
     </li></ul></dd>
     
 
@@ -154,11 +240,41 @@
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
         
-    
+<div class="param-desc">
+    plainText
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
 
     
-        <h3 class="subsection-title">Methods</h3>
+
+
+
+
 
         
             
@@ -267,7 +383,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line78">line 78</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -292,6 +408,184 @@
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="encryptPlainText"><span class="type-signature"></span>encryptPlainText<span class="signature">(plaintext, key)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>plaintext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    ciphertext
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -400,7 +694,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line119">line 119</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -559,7 +853,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line135">line 135</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -716,7 +1010,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line95">line 95</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -867,7 +1161,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line61">line 61</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -1045,7 +1339,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line51">line 51</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line50">line 50</a>
     </li></ul></dd>
     
 
@@ -1263,7 +1557,209 @@ Otherwise, returns false.
     
 
     
-    <h4 class="name" id="uploadToIPFS"><span class="type-signature"></span>uploadToIPFS<span class="signature">(dataToUpload)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="saveToLocalKeyMap"><span class="type-signature"></span>saveToLocalKeyMap<span class="signature">(cid, assetName, symmetricKey, path)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>assetName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>symmetricKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line146">line 146</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="uploadToIPFS"><span class="type-signature">(async) </span>uploadToIPFS<span class="signature">(dataToUpload)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1360,7 +1856,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line7">line 7</a>
+        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -1433,8 +1929,6 @@ Otherwise, returns false.
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -1447,7 +1941,53 @@ Otherwise, returns false.
 
         <tr>
             
-                <td class="name"><code>iotDeviceName</code></td>
+                <td class="name"><code>device_name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The IoT device name</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">First 10 characters of a Date.toIsoString() generated by JavaScript.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
@@ -1460,18 +2000,10 @@ Otherwise, returns false.
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">The IoT device name and the corresponding array of IoT data, may or may not always be in this Object.</td>
+            <td class="description last">Array of Objects containing timestamped IoT device readings.</td>
         </tr>
 
     
@@ -1540,13 +2072,13 @@ Otherwise, returns false.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#PORT">PORT</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#filterData">filterData</a></li><li><a href="global.html#isTodaysDate">isTodaysDate</a></li><li><a href="global.html#keepPreviousData">keepPreviousData</a></li><li><a href="global.html#loadFileAsObject">loadFileAsObject</a></li><li><a href="global.html#locallyStoreJSON">locallyStoreJSON</a></li><li><a href="global.html#processDataInput">processDataInput</a></li><li><a href="global.html#uploadToIPFS">uploadToIPFS</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decryptToPlainText">decryptToPlainText</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#encryptPlainText">encryptPlainText</a></li><li><a href="global.html#filterData">filterData</a></li><li><a href="global.html#isTodaysDate">isTodaysDate</a></li><li><a href="global.html#keepPreviousData">keepPreviousData</a></li><li><a href="global.html#loadFileAsObject">loadFileAsObject</a></li><li><a href="global.html#locallyStoreJSON">locallyStoreJSON</a></li><li><a href="global.html#processDataInput">processDataInput</a></li><li><a href="global.html#saveToLocalKeyMap">saveToLocalKeyMap</a></li><li><a href="global.html#uploadToIPFS">uploadToIPFS</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Jul 21 2023 13:01:06 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Jul 24 2023 17:46:12 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

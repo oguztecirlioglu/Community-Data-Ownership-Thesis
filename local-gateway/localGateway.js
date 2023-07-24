@@ -2,6 +2,8 @@ const express = require("express");
 require("./jsDocTypes");
 const utils = require("./utils");
 const ipfsUtils = require("./ipfsUtils");
+const crypto = require("crypto");
+const { default: axios } = require("axios");
 
 const app = express();
 app.use(express.json());
@@ -99,6 +101,25 @@ if (require.main == module) {
       return res.status(406).send("Error comitting IoT Data, error is:" + message);
 
     res.status(200).send("Data submitted successfully");
+  });
+
+  // test path with hardcoded values.
+  app.get("/api/getCID", async (req, res) => {
+    const encryptionKey = "FOPoVJhUUf17kxTT0D2gDB9pxZWCS3K/1FY7YqfKtjA=";
+    const cid = "QmWAE9oFbKofDEjeYdoEjk5TCzpu7cPUzdzAaLahq38RB8";
+
+    const response = await axios.get(`http://localhost:8080/ipfs/${cid}`);
+    const ciphertext = response.data;
+    console.log(ciphertext);
+    const decipher = crypto.createDecipheriv(
+      "aes-256-ecb",
+      Buffer.from(encryptionKey, "base64"),
+      null
+    );
+    let plaintext = decipher.update(ciphertext, "base64", "utf8");
+    plaintext += decipher.final("utf8");
+
+    res.status(200).send(JSON.parse(plaintext));
   });
 
   app.listen(PORT, () => {
