@@ -1,0 +1,2 @@
+1. Use cryptogen, and crypto-config-<component>.yaml to generate crypto material for orderer and org.
+2. Run docker compose file that has all the volume mappings, of crypto material, peercfg, where to store data, and hosts docker.sock

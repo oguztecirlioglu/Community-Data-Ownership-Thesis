@@ -87,6 +87,9 @@ async function dataUploadLifecycle(dailyStorage) {
     delete dailyStorage[key];
 
     // upload cid to hf as org asset.
+    // assetName = deviceName + date
+    // Asset on HF should be: assetName: {cid, symmetric key THATS BEEN ENCRYPTED WITH ORGS PUBLIC KEY, date of asset, deviceName}
+    // HF network should initially be: 1 org (peer and rof)
   }
 }
 
