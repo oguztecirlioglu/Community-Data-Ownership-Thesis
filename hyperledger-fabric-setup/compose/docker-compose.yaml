@@ -39,7 +39,7 @@ services:
     volumes:
       - ../organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/msp:/var/hyperledger/orderer/msp
       - ../organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/:/var/hyperledger/orderer/tls
-      - ../data/orderer:/var/hyperledger/production/orderer
+      - ../container-data/orderer:/var/hyperledger/production/orderer
     ports:
       - 7050:7050
       - 7053:7053
@@ -78,8 +78,8 @@ services:
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabrictest
     volumes:
       - ../organizations/peerOrganizations/org1.fabrictest.com/peers/peer0.org1.fabrictest.com:/etc/hyperledger/fabric
-      - ../data/peer:/var/hyperledger/production
-      - ./peercfg:/etc/hyperledger/peercfg
+      - ../container-data/peer:/var/hyperledger/production
+      - ../peercfg:/etc/hyperledger/peercfg
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
     working_dir: /root
     command: peer node start
