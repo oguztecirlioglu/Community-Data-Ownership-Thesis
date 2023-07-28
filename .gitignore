@@ -11,3 +11,4 @@ hyperledger-fabric-setup/container-data
 hyperledger-fabric-setup/organizations
 hyperledger-fabric-setup/install-fabric.sh
 hyperledger-fabric-setup/ipfscc/ipfscc.tar.gz
+hyperledger-fabric-setup/channel-artifacts/mychannel.block
