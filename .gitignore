@@ -8,4 +8,5 @@ node_modules
 hyperledger-fabric-setup/bin
 hyperledger-fabric-setup/builders
 hyperledger-fabric-setup/container-data
-
+hyperledger-fabric-setup/organizations
+hyperledger-fabric-setup/install-fabric.sh

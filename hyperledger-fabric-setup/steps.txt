@@ -1,5 +1,12 @@
 1. Use cryptogen, and crypto-config-<component>.yaml to generate crypto material for orderer and org.
 2. Run docker compose file that has all the volume mappings, of crypto material, peercfg, where to store data, and hosts docker.sock
 3. Create genesis block from configtx.yaml, send Genesis block & create Channel using orderer.
-4. join Org1 to channel. exported paths need to be absolute, not relative, otherwise exported vars are appended to FABRIC_CFG_PATH
-5. Install Chaincode
+4. join Org1 to channel. exported paths need to be absolute, not relative, otherwlise exported vars are appended to FABRIC_CFG_PAT9oiiH
+
+6. Package CC,
+7. Install CC on Peer
+     - Need to fix How to fix "dial unix /var/run/docker.sock: connect: permission denied" 
+8. Approve CC
+9. Commit CC to channel
+
+

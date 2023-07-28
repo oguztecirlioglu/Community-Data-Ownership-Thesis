@@ -30,7 +30,7 @@ PeerOrgs:
     #                 Org.Domain, respectively.
     # ---------------------------------------------------------------------------
     #   - Hostname: foo # implicitly "foo.org1.fabrictest.com"
-    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #     CommonName: foo27.org5.fabrictest.com # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
     # ---------------------------------------------------------------------------
