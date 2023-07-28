@@ -10,3 +10,4 @@ hyperledger-fabric-setup/builders
 hyperledger-fabric-setup/container-data
 hyperledger-fabric-setup/organizations
 hyperledger-fabric-setup/install-fabric.sh
+hyperledger-fabric-setup/ipfscc/ipfscc.tar.gz

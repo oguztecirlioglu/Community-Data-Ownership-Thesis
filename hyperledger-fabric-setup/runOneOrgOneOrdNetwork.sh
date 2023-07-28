@@ -162,7 +162,7 @@ popd
 
 
 echoln "Package Chaincode"
-peer lifecycle chaincode package $CC_NAME.tar.gz -p ${CC_SRC_PATH} --lang golang --label ${CC_NAME}_${CC_VERSION}
+peer lifecycle chaincode package "$CC_SRC_PATH/$CC_NAME.tar.gz" -p ${CC_SRC_PATH} --lang golang --label ${CC_NAME}_${CC_VERSION}
 checkAndThrowError $? "Chaincode package failed"
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid "$CC_SRC_PATH/$CC_NAME.tar.gz")
 echoln "Chaincode Packaged"
