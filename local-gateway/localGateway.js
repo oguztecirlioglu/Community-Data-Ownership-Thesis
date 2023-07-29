@@ -2,6 +2,7 @@ const express = require("express");
 require("./jsDocTypes");
 const utils = require("./utils");
 const ipfsUtils = require("./ipfsUtils");
+const fabricGatewayClient = require("./fabricGatewayClient");
 const crypto = require("crypto");
 const { default: axios } = require("axios");
 
@@ -14,6 +15,8 @@ const JSON_PATH = utils.envOrDefault("LOCAL_GATEWAY_JSON_PATH", "./localStorage.
 const IPFS_API_PORT = utils.envOrDefault("IPFS_API_PORT", 5001);
 const IPFS_HTTP_GATEWAY_PORT = utils.envOrDefault("IPFS_HTTP_GATEWAY_PORT", 8080);
 const IPFSCLUSTER_API_PORT = utils.envOrDefault("IPFSCLUSTER_API_PORT", 9094);
+const CHANNEL_NAME = "mychannel";
+const CHAINCODE_NAME = "ipfscc";
 
 /* 
 The previouslySavedData is only to be saved when the app closes or crashes. Once it's loaded, we only use the in memory object.
@@ -23,10 +26,11 @@ This relies on the assumption that the key-value pair doesn't have any data from
 
 To prevent duplicating data, delete current saved file so that if an unhandleable crash occurs the same data isn't uploaded twice. 
 */
-
 const previouslySavedData = utils.loadFileAsObject(JSON_PATH);
 const { keep: dataToKeep, upload: dataToUpload } = utils.filterData(previouslySavedData);
 const dailyStorage = dataToKeep;
+let gateway;
+let client;
 
 utils.deleteFile(JSON_PATH);
 
@@ -93,42 +97,88 @@ async function dataUploadLifecycle(dailyStorage) {
   }
 }
 
-// NodeJS equivalent of creating a "main" method.
-if (require.main == module) {
-  const poller = setInterval(() => dataUploadLifecycle(dailyStorage), UPDATE_POLL_FREQUENCY * 1000);
+async function main() {
+  // NodeJS equivalent of creating a "main" method.
+  if (require.main == module) {
+    // Initialise Fabric Gateway API.
+    try {
+      const { gateway: gtwy, client: clnt } = await fabricGatewayClient.gatewayAPI();
+      gateway = gtwy;
+      client = clnt;
+    } catch (error) {
+      console.error("Error with gateway", error);
+    }
 
-  app.post("/api/dataInput", (req, res) => {
-    let { status_code, message } = utils.processDataInput(req.body, dailyStorage);
-
-    if (status_code != 0)
-      return res.status(406).send("Error comitting IoT Data, error is:" + message);
-
-    res.status(200).send("Data submitted successfully");
-  });
-
-  // test path with hardcoded values.
-  app.get("/api/getCID", async (req, res) => {
-    const encryptionKey = "FOPoVJhUUf17kxTT0D2gDB9pxZWCS3K/1FY7YqfKtjA=";
-    const cid = "QmWAE9oFbKofDEjeYdoEjk5TCzpu7cPUzdzAaLahq38RB8";
-
-    const response = await axios.get(`http://localhost:8080/ipfs/${cid}`);
-    const ciphertext = response.data;
-    console.log(ciphertext);
-    const decipher = crypto.createDecipheriv(
-      "aes-256-ecb",
-      Buffer.from(encryptionKey, "base64"),
-      null
+    const poller = setInterval(
+      () => dataUploadLifecycle(dailyStorage),
+      UPDATE_POLL_FREQUENCY * 1000
     );
-    let plaintext = decipher.update(ciphertext, "base64", "utf8");
-    plaintext += decipher.final("utf8");
 
-    res.status(200).send(JSON.parse(plaintext));
-  });
+    app.post("/api/dataInput", (req, res) => {
+      let { status_code, message } = utils.processDataInput(req.body, dailyStorage);
 
-  app.listen(PORT, () => {
-    console.log(`Local Gateway running on ${PORT}`);
-    console.log(`Local Gateway configuration variables are: \nPORT=${PORT}`);
-  });
+      if (status_code != 0)
+        return res.status(406).send("Error comitting IoT Data, error is:" + message);
+
+      res.status(200).send("Data submitted successfully");
+    });
+
+    // test path with hardcoded values.
+    app.get("/api/getCID", async (req, res) => {
+      const encryptionKey = "FOPoVJhUUf17kxTT0D2gDB9pxZWCS3K/1FY7YqfKtjA=";
+      const cid = "QmWAE9oFbKofDEjeYdoEjk5TCzpu7cPUzdzAaLahq38RB8";
+
+      const response = await axios.get(`http://localhost:8080/ipfs/${cid}`);
+      const ciphertext = response.data;
+      console.log(ciphertext);
+      const decipher = crypto.createDecipheriv(
+        "aes-256-ecb",
+        Buffer.from(encryptionKey, "base64"),
+        null
+      );
+      let plaintext = decipher.update(ciphertext, "base64", "utf8");
+      plaintext += decipher.final("utf8");
+
+      res.status(200).send(JSON.parse(plaintext));
+    });
+
+    app.get("/fabric/initLedger", async (req, res) => {
+      try {
+        // Get a network instance representing the channel where the smart contract is deployed.
+        const network = gateway.getNetwork(CHANNEL_NAME);
+
+        // Get the smart contract from the network.
+        const contract = network.getContract(CHAINCODE_NAME);
+
+        await fabricGatewayClient.initLedger(contract);
+        res.status(201).send("Ledger init successful.");
+      } catch (error) {
+        console.error("******** FAILED to init ledger:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
+    app.get("/fabric/getAllAssets", async (req, res) => {
+      try {
+        // Get a network instance representing the channel where the smart contract is deployed.
+        const network = gateway.getNetwork(CHANNEL_NAME);
+
+        // Get the smart contract from the network.
+        const contract = network.getContract(CHAINCODE_NAME);
+
+        const result = await fabricGatewayClient.getAllAssets(contract);
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("******** FAILED to get all assets:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Local Gateway running on ${PORT}`);
+      console.log(`Local Gateway configuration variables are: \nPORT=${PORT}`);
+    });
+  }
 }
 
 function cleanUpServer(eventType) {
@@ -136,6 +186,8 @@ function cleanUpServer(eventType) {
     `${eventType} Message received. Closing application, saving aggregated IoT data to ${process.env.PWD}/${JSON_PATH}`
   );
   utils.locallyStoreJSON(dailyStorage, JSON_PATH);
+  gateway.close();
+  client.close();
   process.exit();
 }
 
@@ -143,3 +195,5 @@ function cleanUpServer(eventType) {
 [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
   process.on(eventType, cleanUpServer.bind(null, eventType));
 });
+
+main();
