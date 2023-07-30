@@ -1,0 +1,34 @@
+// get ID of submitting client
+clientID, err := s.GetSubmittingClientIdentity(ctx)
+if err != nil {
+	return fmt.Errorf("failed to get client identity %v", err)
+}
+
+// get org of submitting client
+clientOrgID, err := ctx.GetClientIdentity().GetMSPID()
+if err != nil {
+	return fmt.Errorf("failed to get client identity %v", err)
+}
+
+// Could be used to set policies for who owns what data. 
+func setAssetStateBasedEndorsement(ctx contractapi.TransactionContextInterface, auctionID string, orgToEndorse string) error {
+
+	endorsementPolicy, err := statebased.NewStateEP(nil)
+	if err != nil {
+		return err
+	}
+	err = endorsementPolicy.AddOrgs(statebased.RoleTypePeer, orgToEndorse)
+	if err != nil {
+		return fmt.Errorf("failed to add org to endorsement policy: %v", err)
+	}
+	policy, err := endorsementPolicy.Policy()
+	if err != nil {
+		return fmt.Errorf("failed to create endorsement policy bytes from org: %v", err)
+	}
+	err = ctx.GetStub().SetStateValidationParameter(auctionID, policy)
+	if err != nil {
+		return fmt.Errorf("failed to set validation parameter on auction: %v", err)
+	}
+
+	return nil
+}

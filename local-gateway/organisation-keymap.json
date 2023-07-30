@@ -1,18 +1,1 @@
-{
-  "Virtual_IoT_Device_1255_2023-07-23": {
-    "cid": "QmWVvknvDCKAJkKCkHxL2g4r34mF2UnhFfJnKaf4GhmJCa",
-    "assetName": "Virtual_IoT_Device_1255_2023-07-23",
-    "symmetricKey": {
-      "type": "Buffer",
-      "data": [
-        156, 207, 14, 68, 210, 141, 30, 48, 42, 152, 254, 45, 226, 252, 155, 4, 203, 8, 224, 43,
-        180, 41, 40, 37, 222, 252, 55, 92, 18, 250, 101, 53
-      ]
-    }
-  },
-  "Virtual_IoT_Device_8072_2023-07-23": {
-    "cid": "QmWAE9oFbKofDEjeYdoEjk5TCzpu7cPUzdzAaLahq38RB8",
-    "assetName": "Virtual_IoT_Device_8072_2023-07-23",
-    "symmetricKey": "FOPoVJhUUf17kxTT0D2gDB9pxZWCS3K/1FY7YqfKtjA="
-  }
-}
+{"Virtual_IoT_Device_1255_2023-07-23":{"cid":"QmWVvknvDCKAJkKCkHxL2g4r34mF2UnhFfJnKaf4GhmJCa","assetName":"Virtual_IoT_Device_1255_2023-07-23","symmetricKey":{"type":"Buffer","data":[156,207,14,68,210,141,30,48,42,152,254,45,226,252,155,4,203,8,224,43,180,41,40,37,222,252,55,92,18,250,101,53]}},"Virtual_IoT_Device_8072_2023-07-23":{"cid":"QmWAE9oFbKofDEjeYdoEjk5TCzpu7cPUzdzAaLahq38RB8","assetName":"Virtual_IoT_Device_8072_2023-07-23","symmetricKey":"FOPoVJhUUf17kxTT0D2gDB9pxZWCS3K/1FY7YqfKtjA="},"Virtual_IoT_Device_3120_2023-07-29":{"cid":"QmZWubNjYAvGUwF4zmhmCGyxtiWdJjEqJW36Ln5c7cqzjP","assetName":"Virtual_IoT_Device_3120_2023-07-29","symmetricKey":"VBjupi5YxDrqRczZIhwsXmqYLNlTN6EfWeYRy+l1Mug="},"Virtual_IoT_Device_2981_2023-07-29":{"cid":"QmSYPMRbSyJ75TBFAYbYL9A9gSvGQyHhhmrX2aCZCJZurH","assetName":"Virtual_IoT_Device_2981_2023-07-29","symmetricKey":"RN8GBH21M+CaGbtZVuAUEi+hDbOil6TnlGs/kjZMaww="},"Virtual_IoT_Device_5386_2023-07-29":{"cid":"QmbWNihLBDQGjfxURCbN6kQTxUbD7ABsbTxT15MqEfRGw1","assetName":"Virtual_IoT_Device_5386_2023-07-29","symmetricKey":"aiL168oAH3qR8f91Vpwsi8/DsEty+RSDQlK55gcgOEI="},"Virtual_IoT_Device_1788_2023-07-29":{"cid":"QmQvTe1ZzuDhG3rmqhnuM91nUviLe1ybzZt5utw8GfcxoG","assetName":"Virtual_IoT_Device_1788_2023-07-29","symmetricKey":"kG1+hm3nybqGCWHiutKUhtzgduzEYoLpPWy1p9/voXE="},"Virtual_IoT_Device_1928_2023-07-29":{"cid":"QmXFw98AeSpvpsive8gFwB4E62AdwUxG8hVUshP5kfKoBE","assetName":"Virtual_IoT_Device_1928_2023-07-29","symmetricKey":"n+qY8KvvrbiA6/AipL/MYg0qirAcM8IYelkGTkk7L9A="},"Virtual_IoT_Device_3769_2023-07-29":{"cid":"QmVHMvG99j975HWqDzjcGQbAwwXtytx8bpcvgp7XYSNXhF","assetName":"Virtual_IoT_Device_3769_2023-07-29","symmetricKey":"Ixwzc5Ha/QFY5OsLVzYLTbwRrtpnTnXMy1xkG3N7T2I="},"Virtual_IoT_Device_9669_2023-07-29":{"cid":"QmaT6qKuXCCEa7uUD4iqJSDuuXsdthAbWgx2A8CnymErET","assetName":"Virtual_IoT_Device_9669_2023-07-29","symmetricKey":"SFgPJLncBIZNxoHSAiW32UB41TyBIUaZZfix1j8w6pg="},"Virtual_IoT_Device_2698_2023-07-29":{"cid":"QmYcw1P1hnevPG6asDXVNcwynFVFkMEZQ72bbspY1GH6AG","assetName":"Virtual_IoT_Device_2698_2023-07-29","symmetricKey":"iiFgyc+HVr+Yes5gbrm2T/ajpk1jraUr0JjVJPN7fGo="},"Virtual_IoT_Device_4057_2023-07-29":{"cid":"QmVs4t86uMpgRBqWqWeVJe3o2mb6YzvkXxkzdu7q9StJ3d","assetName":"Virtual_IoT_Device_4057_2023-07-29","symmetricKey":"QUCVQNdCfjmxFV31REwd9nQHiO5pl7vpMxAkChCfQ4U="}}

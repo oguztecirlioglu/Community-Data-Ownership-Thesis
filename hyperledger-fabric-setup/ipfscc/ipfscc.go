@@ -10,7 +10,7 @@ import (
 
 // SmartContract provides functions for managing an Asset
 type SmartContract struct {
-  contractapi.Contract
+	contractapi.Contract
 }
 
 // Asset describes basic details of what makes up a simple asset
@@ -18,87 +18,91 @@ type SmartContract struct {
 // golang keeps the order when marshal to json but doesn't order automatically
 
 type DataAsset struct {
-  Name           string `json:"Name"`
-  IPFS_CID		 string `json:"IPFS_CID"`
+	Name     string `json:"Name"`
+	IPFS_CID string `json:"IPFS_CID"`
+	Date     string `json:"Date"`
 }
-
-
-// InitLedger adds a base set of assets to the ledger
-func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-  assets := []DataAsset{
-	{Name: "AQM_24_04_2022", IPFS_CID: "A1"},
-	{Name: "AQM_25_04_2022", IPFS_CID: "A2"},
-	{Name: "AQM_12_05_2022", IPFS_CID: "B1"},
-	{Name: "AQM_23_05_2022", IPFS_CID: "B2"},
-	{Name: "AQM_04_06_2022", IPFS_CID: "C1"},
-  }
-
-  for _, asset := range assets {
-    assetJSON, err := json.Marshal(asset)
-    if err != nil {
-        return err
-    }
-
-    err = ctx.GetStub().PutState(asset.Name, assetJSON)
-    if err != nil {
-        return fmt.Errorf("failed to put to world state. %v", err)
-    }
-  }
-
-  return nil
-}
-
 
 // GetAllAssets returns all assets found in world state
 func (s *SmartContract) GetAllAssets(ctx contractapi.TransactionContextInterface) ([]*DataAsset, error) {
 	// range query with empty string for startKey and endKey does an
 	// open-ended query of all assets in the chaincode namespace.
 	resultsIterator, err := ctx.GetStub().GetStateByRange("", "")
+
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
 	defer resultsIterator.Close()
-  
+
 	var assets []*DataAsset
 	for resultsIterator.HasNext() {
-	  queryResponse, err := resultsIterator.Next()
-	  if err != nil {
-		return nil, err
-	  }
-  
-	  var asset DataAsset
-	  err = json.Unmarshal(queryResponse.Value, &asset)
-	  if err != nil {
-		return nil, err
-	  }
-	  assets = append(assets, &asset)
-	}
-  
-	return assets, nil
-  }
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return nil, err
+		}
 
+		var asset DataAsset
+		err = json.Unmarshal(queryResponse.Value, &asset)
+		if err != nil {
+			return nil, err
+		}
+		assets = append(assets, &asset)
+	}
+
+	return assets, nil
+}
 
 // GetAssetByID returns asset by name
-func (s *SmartContract) GetASsetByName(ctx contractapi.TransactionContextInterface, name string) (*DataAsset, error) {
-	// range query with empty string for startKey and endKey does an
-	// open-ended query of all assets in the chaincode namespace.
-	assetJSON, err := ctx.GetStub().GetState(name)
+func (s *SmartContract) GetAssetByID(ctx contractapi.TransactionContextInterface, id string) (*DataAsset, error) {
+	assetJSON, err := ctx.GetStub().GetState(id)
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
 	if assetJSON == nil {
-		return nil, fmt.Errorf("the asset %s does not exist", name)
+		return nil, fmt.Errorf("the asset %s does not exist", id)
 	}
-	
+
 	var asset DataAsset
 	err = json.Unmarshal(assetJSON, &asset)
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
-  
+
 	return &asset, nil
-  }
-  
+}
+
+func (s *SmartContract) UploadDataAsAsset(ctx contractapi.TransactionContextInterface, deviceName string, cid string, date string) error {
+	id := deviceName + "_" + date
+	exists, err := s.AssetExists(ctx, id)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return fmt.Errorf("the asset %s already exists", id)
+	}
+
+	asset := DataAsset{
+		Name:     deviceName,
+		IPFS_CID: cid,
+		Date:     date,
+	}
+	assetJSON, err := json.Marshal(asset)
+	if err != nil {
+		return err
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
+}
+
+// AssetExists returns true when asset with given ID exists in world state
+func (s *SmartContract) AssetExists(ctx contractapi.TransactionContextInterface, id string) (bool, error) {
+	assetJSON, err := ctx.GetStub().GetState(id)
+	if err != nil {
+		return false, fmt.Errorf("failed to read from world state: %v", err)
+	}
+
+	return assetJSON != nil, nil
+}
 
 func main() {
 	assetChaincode, err := contractapi.NewChaincode(&SmartContract{})

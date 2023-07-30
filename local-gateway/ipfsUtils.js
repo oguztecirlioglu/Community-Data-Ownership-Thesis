@@ -7,14 +7,16 @@ require("./jsDocTypes");
 /**
  *
  * @param {Aggregated_IoT_Data} dataToUpload
+ * @param {String} ipfsClusterApiPort
+ * @returns
  */
 async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
   // ipfs-cluster-ctl pin add --wait ... waits until the IPFS-pinning process is complete in at least 1 peer.
   // --replication-min , max flag in ipfs-cluster-ctl
   if (Object.keys(dataToUpload).length !== 3)
-    return { status: 3, cid: "Data passed to function is malformed!" };
+    return { status: 3, cid: "Data passed to function is malformed!", symmetricKey: null };
 
-  console.log(`\n\nUploading data for IoT Device ${Object.keys(dataToUpload)[0]}`);
+  console.log(`\n\nUploading data for IoT Device ${Object.values(dataToUpload)[0]}`);
 
   console.log(`Compress data`);
 
@@ -35,15 +37,19 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
   } catch (error) {
     console.error("Error sending image:", error.message);
     cid = "error";
-    return { status: 1, cid: error.message };
+    return { status: 1, cid: error.message, symmetricKey: null };
   }
 
   if (cid != "error") {
     // All is succesful, save CID, Asset Name, Encryption Key to local machine.
     utils.saveToLocalKeyMap(cid, assetName, symmetricKey);
-    return { status: 0, cid: cid };
+    return { status: 0, cid: cid, symmetricKey: symmetricKey };
   } else {
-    return { status: 2, cid: "Uncaught error ocurred uploading data to IPFS and IPFS Cluster." };
+    return {
+      status: 2,
+      cid: "Uncaught error ocurred uploading data to IPFS and IPFS Cluster.",
+      symmetricKey: null,
+    };
   }
 }
 

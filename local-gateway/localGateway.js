@@ -15,8 +15,8 @@ const JSON_PATH = utils.envOrDefault("LOCAL_GATEWAY_JSON_PATH", "./localStorage.
 const IPFS_API_PORT = utils.envOrDefault("IPFS_API_PORT", 5001);
 const IPFS_HTTP_GATEWAY_PORT = utils.envOrDefault("IPFS_HTTP_GATEWAY_PORT", 8080);
 const IPFSCLUSTER_API_PORT = utils.envOrDefault("IPFSCLUSTER_API_PORT", 9094);
-const CHANNEL_NAME = "mychannel";
-const CHAINCODE_NAME = "ipfscc";
+const CHANNEL_NAME = utils.envOrDefault("FABRIC_CHANNEL_NAME", "mychannel");
+const CHAINCODE_NAME = utils.envOrDefault("FABRIC_CHAINCODE_NAME", "ipfscc");
 
 /* 
 The previouslySavedData is only to be saved when the app closes or crashes. Once it's loaded, we only use the in memory object.
@@ -57,6 +57,7 @@ utils.deleteFile(JSON_PATH);
       console.log(`Error uploading data to IPFS, error is:${cid}`);
     }
   }
+  console.log("Succesfully processed saved data from previous run.");
 })();
 
 async function dataUploadLifecycle(dailyStorage) {
@@ -76,24 +77,27 @@ async function dataUploadLifecycle(dailyStorage) {
       data: value,
     };
 
-    const { status, cid } = await ipfsUtils.uploadToIPFS(
+    const { status, cid, symmetricKey } = await ipfsUtils.uploadToIPFS(
       dataEntry,
-      IPFSCLUSTER_API_PORT,
-      IPFS_HTTP_GATEWAY_PORT
+      IPFSCLUSTER_API_PORT
     );
 
-    if (status === 0) {
-      console.log(`Data successfully uploaded to IPFS for device ${deviceName}, CID is: ${cid}`);
-    } else if (status !== 0) {
+    if (status !== 0) {
       console.log(`Error uploading data to IPFS, error is:${cid}`);
+      continue;
     }
 
-    delete dailyStorage[key];
+    console.log(`Data successfully uploaded to IPFS for device ${deviceName}, CID is: ${cid}`);
 
-    // upload cid to hf as org asset.
-    // assetName = deviceName + date
-    // Asset on HF should be: assetName: {cid, symmetric key THATS BEEN ENCRYPTED WITH ORGS PUBLIC KEY, date of asset, deviceName}
-    // HF network should initially be: 1 org (peer and rof)
+    // Get a network instance representing the channel where the smart contract is deployed.
+    const network = gateway.getNetwork(CHANNEL_NAME);
+
+    // Get the smart contract from the network.
+    const contract = network.getContract(CHAINCODE_NAME);
+    await fabricGatewayClient.uploadDataAsAsset(contract, deviceName, cid, dataDate);
+    console.log(`Data successfully uploaded to Fabric Ledger for device ${deviceName}`);
+
+    delete dailyStorage[key];
   }
 }
 
@@ -106,7 +110,7 @@ async function main() {
       gateway = gtwy;
       client = clnt;
     } catch (error) {
-      console.error("Error with gateway", error);
+      console.error("Error connection to Fabric API Gateway", error);
     }
 
     const poller = setInterval(
@@ -142,30 +146,35 @@ async function main() {
       res.status(200).send(JSON.parse(plaintext));
     });
 
-    app.get("/fabric/initLedger", async (req, res) => {
-      try {
-        // Get a network instance representing the channel where the smart contract is deployed.
-        const network = gateway.getNetwork(CHANNEL_NAME);
+    app.get("/fabric/getAsset/:assetId", async (req, res) => {
+      const assetId = req.params.assetId;
+      const symmetricKey = utils.getKeyFromLocalKeyMap(assetId);
 
-        // Get the smart contract from the network.
-        const contract = network.getContract(CHAINCODE_NAME);
+      const network = gateway.getNetwork(CHANNEL_NAME);
+      const contract = network.getContract(CHAINCODE_NAME);
+      const asset = await fabricGatewayClient.getAssetByID(contract, assetId);
+      const dataCid = asset?.IPFS_CID;
 
-        await fabricGatewayClient.initLedger(contract);
-        res.status(201).send("Ledger init successful.");
-      } catch (error) {
-        console.error("******** FAILED to init ledger:", error);
-        res.status(500).send(`ERROR: ${error.message}`);
-      }
+      const response = await axios.get(`http://localhost:8080/ipfs/${dataCid}`);
+      const ciphertext = response.data;
+      console.log(ciphertext);
+      const decipher = crypto.createDecipheriv(
+        "aes-256-ecb",
+        Buffer.from(symmetricKey, "base64"),
+        null
+      );
+      let plaintext = decipher.update(ciphertext, "base64", "utf8");
+      plaintext += decipher.final("utf8");
+
+      res.status(200).send(JSON.parse(plaintext));
     });
+
+    app.get("/fabric/getAllOrgAssets", async (req, res) => {});
 
     app.get("/fabric/getAllAssets", async (req, res) => {
       try {
-        // Get a network instance representing the channel where the smart contract is deployed.
         const network = gateway.getNetwork(CHANNEL_NAME);
-
-        // Get the smart contract from the network.
         const contract = network.getContract(CHAINCODE_NAME);
-
         const result = await fabricGatewayClient.getAllAssets(contract);
         res.status(200).send(result);
       } catch (error) {
@@ -176,7 +185,6 @@ async function main() {
 
     app.listen(PORT, () => {
       console.log(`Local Gateway running on ${PORT}`);
-      console.log(`Local Gateway configuration variables are: \nPORT=${PORT}`);
     });
   }
 }

@@ -110,20 +110,6 @@ async function newSigner() {
   return fabricGateway.signers.newPrivateKeySigner(privateKey);
 }
 
-/**
- * This type of transaction would typically only be run once by an application the first time it was started after its
- * initial deployment. A new version of the chaincode deployed later would likely not need to run an "init" function.
- */
-async function initLedger(contract) {
-  console.log(
-    "\n--> Submit Transaction: InitLedger, function creates the initial set of assets on the ledger"
-  );
-  await contract.submitTransaction("InitLedger");
-  console.log("*** Transaction committed successfully");
-}
-/**
- * Evaluate a transaction to query ledger state.
- */
 async function getAllAssets(contract) {
   console.log(
     "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
@@ -134,16 +120,41 @@ async function getAllAssets(contract) {
   console.log("*** Result:", result);
   return result;
 }
+
+// Need to think about encryption keys as well
 /**
- * Submit a transaction synchronously, blocking until it has been committed to the ledger.
+ * Submits a blocking synchronous transaction
+ * @param {*} deviceName
+ * @param {*} cid
+ * @param {*} date
  */
-async function createAsset(contract) {
+async function uploadDataAsAsset(contract, deviceName, cid, date) {
   console.log(
-    "\n--> Submit Transaction: CreateAsset, creates new asset with ID, Color, Size, Owner and AppraisedValue arguments"
+    "\n--> Submit Transaction: UploadDataAsAsset, creates a new asset with ID: cid+_+date, deviceName, cid, date"
   );
-  await contract.submitTransaction("CreateAsset", assetId, "yellow", "5", "Tom", "1300");
-  console.log("*** Transaction committed successfully");
+  try {
+    await contract.submitTransaction("UploadDataAsAsset", deviceName, cid, date);
+    console.log("*** Transaction committed successfully");
+  } catch (error) {
+    console.log("*** Error during UploadDataAsAsset: \n", error);
+  }
 }
+
+async function getAssetByID(contract, assetId) {
+  console.log(
+    "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
+  );
+  try {
+    const resultBytes = await contract.evaluateTransaction("GetAssetByID", assetId);
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    console.log("*** Asset Received succesfully");
+    return result;
+  } catch (error) {
+    console.error("***Error during GetAssetById: \n", error);
+  }
+}
+
 /**
  * Submit transaction asynchronously, allowing the application to process the smart contract response (e.g. update a UI)
  * while waiting for the commit notification.
@@ -166,6 +177,7 @@ async function transferAssetAsync(contract) {
   }
   console.log("*** Transaction committed successfully");
 }
+
 async function readAssetByID(contract) {
   console.log("\n--> Evaluate Transaction: ReadAsset, function returns asset attributes");
   const resultBytes = await contract.evaluateTransaction("ReadAsset", assetId);
@@ -188,6 +200,6 @@ async function updateNonExistentAsset(contract) {
   }
 }
 
-const fabricGatewayClient = { gatewayAPI, initLedger, getAllAssets };
+const fabricGatewayClient = { gatewayAPI, getAllAssets, getAssetByID, uploadDataAsAsset };
 
 module.exports = fabricGatewayClient;

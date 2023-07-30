@@ -186,4 +186,4 @@ checkAndThrowError $? "Chaincode commit failed"
 echoln "Succesfully committed chaincode"
 
 
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.fabrictest.com --tls --cafile "$ORDERER_CA" -C mychannel -n ipfscc --peerAddresses localhost:7051 --tlsRootCertFiles "$PEER0_ORG1_CA" -c '{"function":"InitLedger","Args":[]}'
+# peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.fabrictest.com --tls --cafile "$ORDERER_CA" -C mychannel -n ipfscc --peerAddresses localhost:7051 --tlsRootCertFiles "$PEER0_ORG1_CA" -c '{"function":"InitLedger","Args":[]}'

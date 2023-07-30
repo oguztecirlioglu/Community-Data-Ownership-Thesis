@@ -1,5 +1,6 @@
 require("./jsDocTypes");
 const fs = require("fs");
+const path = require("node:path");
 
 /**
  * Processes the JSON object recieved in exposed POST endpoint.
@@ -49,7 +50,9 @@ function envOrDefault(KEY, defaultValue) {
  */
 function locallyStoreJSON(jsonData, fileName) {
   let dailyDataString = JSON.stringify(jsonData);
-  fs.writeFileSync(fileName, dailyDataString);
+  const filePath = path.join(__dirname, fileName);
+
+  fs.writeFileSync(filePath, dailyDataString);
 }
 
 /**
@@ -59,7 +62,8 @@ function locallyStoreJSON(jsonData, fileName) {
  */
 function loadFileAsObject(fileName) {
   try {
-    const fileContent = fs.readFileSync(fileName);
+    const filePath = path.join(__dirname, fileName);
+    const fileContent = fs.readFileSync(filePath);
     const savedData = JSON.parse(fileContent);
     return savedData;
   } catch (err) {
@@ -75,7 +79,8 @@ function loadFileAsObject(fileName) {
  * @param {String} fileName Name of file to delete.
  */
 function deleteFile(fileName) {
-  fs.unlink(fileName, (err) => {
+  const filePath = path.join(__dirname, fileName);
+  fs.unlink(filePath, (err) => {
     if (err) {
       console.log(`Error deleting file '${fileName}':`, err.message);
     } else {
@@ -141,23 +146,40 @@ function isTodaysDate(date) {
  * @param {String} cid
  * @param {String} assetName
  * @param {*} symmetricKey
- * @param {String} path
+ * @param {String} keymapPath
  */
-function saveToLocalKeyMap(cid, assetName, symmetricKey, path) {
-  if (path == null) {
-    path = "./organisation-keymap.json";
+function saveToLocalKeyMap(cid, assetName, symmetricKey, keymapPath) {
+  if (keymapPath == null) {
+    keymapPath = "./organisation-keymap.json";
   }
+  const filePath = path.join(__dirname, "organisation-keymap.json");
 
   symmetricKey = symmetricKey.toString("base64");
 
   try {
-    let existingKeyMapRaw = fs.readFileSync(path);
+    let existingKeyMapRaw = fs.readFileSync(filePath);
     let existingKeyMap = JSON.parse(existingKeyMapRaw);
     existingKeyMap[assetName] = { cid, assetName, symmetricKey };
-    fs.writeFileSync(path, JSON.stringify(existingKeyMap));
+    fs.writeFileSync(filePath, JSON.stringify(existingKeyMap));
   } catch {
     let existingKeyMap = { [assetName]: { cid, assetName, symmetricKey } };
-    fs.writeFileSync(path, JSON.stringify(existingKeyMap));
+    fs.writeFileSync(filePath, JSON.stringify(existingKeyMap));
+  }
+}
+
+function getKeyFromLocalKeyMap(stateId, keymapPath) {
+  if (keymapPath == null) {
+    keymapPath = "./organisation-keymap.json";
+  }
+  const filePath = path.join(__dirname, "organisation-keymap.json");
+
+  try {
+    let existingKeyMapRaw = fs.readFileSync(filePath);
+    let existingKeyMap = JSON.parse(existingKeyMapRaw);
+    return existingKeyMap[stateId].symmetricKey;
+  } catch (error) {
+    console.error("ERROR, Failed to get symmetric key from stateId in localkeymap: ", error);
+    return null;
   }
 }
 
@@ -170,6 +192,7 @@ const utils = {
   keepPreviousData,
   filterData,
   saveToLocalKeyMap,
+  getKeyFromLocalKeyMap,
 };
 
 module.exports = utils;

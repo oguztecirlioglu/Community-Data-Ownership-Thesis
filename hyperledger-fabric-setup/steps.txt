@@ -10,3 +10,42 @@
 9. Commit CC to channel
 
 
+localGateway integration with the Ledger:
+
+1. IoT Device reads data, pushes it to Gateway.
+2. Gateway receives data, adds it to the 24 hour accumulation of readings for that device (IoTDevice_2323, etc.)
+3. When appropriate data gets compressed and encrypted, then pushed to IPFS. CID is returned.
+4. Use CID, create AssetJSON and upload to HF network.
+5. Symmetric key that decrypts CID is stored on the peer running localGateway in the organisation that owns the data.
+6. If another Org wants to buy this data, encrypt symmetric key with the public key of that org. Transfer encrypted symmetric key to purchasing Org.
+7. Purchasing Org should now decrypt data, and encrypt it using a newly generated Symmetric key, and then store this symmetric key on its own peers file system.
+8. 
+
+OR
+
+1. upload cid to hf as org asset.
+3. Asset on HF should be: assetName: {cid, symmetric key THATS BEEN ENCRYPTED WITH ORGS PUBLIC KEY, date of asset, deviceName}
+4. HF network should initially be: 1 org (peer and rof)
+
+
+
+
+dataStructures:
+
+Sent to uploadToIpfsMethod:
+const dataEntry = {
+      device_name: deviceName,
+      date: dataDate,
+      data: value,
+};
+
+Asset on Fabric network:
+assetId: {
+     device_name:
+     date:
+     cid:
+     ownerOrg:
+}
+
+assetId must be device_name+date
+
