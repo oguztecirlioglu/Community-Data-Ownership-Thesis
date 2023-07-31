@@ -32,3 +32,10 @@ func setAssetStateBasedEndorsement(ctx contractapi.TransactionContextInterface, 
 
 	return nil
 }
+
+// Returns the identity object of the chaincode invocation's submitter
+ctx.getCreator()
+
+
+// SetStateValidationParameter sets the key-level endorsement policy for `key`.
+ctx.GetStub().SetStateValidationParameter()

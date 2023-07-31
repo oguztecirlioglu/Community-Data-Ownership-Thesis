@@ -13,20 +13,21 @@ type SmartContract struct {
 	contractapi.Contract
 }
 
-// Asset describes basic details of what makes up a simple asset
-// Insert struct field in alphabetic order => to achieve determinism accross languages
-// golang keeps the order when marshal to json but doesn't order automatically
-
 type DataAsset struct {
-	Name     string `json:"Name"`
-	IPFS_CID string `json:"IPFS_CID"`
-	Date     string `json:"Date"`
+	AssetName string `json:"assetName"`
+	Date      string `json:"date"`
+	IPFS_CID  string `json:"IPFS_CID"`
 }
 
-// GetAllAssets returns all assets found in world state
+type KeyCIDAsset struct {
+	Date         string `json:"date"`
+	DeviceName   string `json:"deviceName"`
+	IPFS_CID     string `json:"IPFS_CID"`
+	SymmetricKey string `json:"symmetricKey"`
+}
+
+// GetAllAssets returns all assets found in world state, marshalling them into a DataAsset struct.
 func (s *SmartContract) GetAllAssets(ctx contractapi.TransactionContextInterface) ([]*DataAsset, error) {
-	// range query with empty string for startKey and endKey does an
-	// open-ended query of all assets in the chaincode namespace.
 	resultsIterator, err := ctx.GetStub().GetStateByRange("", "")
 
 	if err != nil {
@@ -52,7 +53,7 @@ func (s *SmartContract) GetAllAssets(ctx contractapi.TransactionContextInterface
 	return assets, nil
 }
 
-// GetAssetByID returns asset by name
+// GetAssetByID returns asset by name, asset is marshalled into the DataAsset struct
 func (s *SmartContract) GetAssetByID(ctx contractapi.TransactionContextInterface, id string) (*DataAsset, error) {
 	assetJSON, err := ctx.GetStub().GetState(id)
 	if err != nil {
@@ -82,9 +83,9 @@ func (s *SmartContract) UploadDataAsAsset(ctx contractapi.TransactionContextInte
 	}
 
 	asset := DataAsset{
-		Name:     deviceName,
-		IPFS_CID: cid,
-		Date:     date,
+		AssetName: deviceName,
+		Date:      date,
+		IPFS_CID:  cid,
 	}
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
@@ -102,6 +103,52 @@ func (s *SmartContract) AssetExists(ctx contractapi.TransactionContextInterface,
 	}
 
 	return assetJSON != nil, nil
+}
+
+func (s *SmartContract) UploadKeyPrivateData(ctx contractapi.TransactionContextInterface, deviceName string, IPFS_CID string, date string, symmetricKey string) error {
+	mspid, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return fmt.Errorf("error ocurred getting MSPID: %v", err)
+	}
+	privateCollectionName := "_implicit_org_" + mspid
+
+	keyData := KeyCIDAsset{
+		Date:         date,
+		DeviceName:   deviceName,
+		IPFS_CID:     IPFS_CID,
+		SymmetricKey: symmetricKey,
+	}
+	jsonAsBytes, err := json.Marshal(keyData)
+	assetKey := deviceName + "_" + date
+
+	if err != nil {
+		return fmt.Errorf("error ocurred marshalling JSON to Byte array: %v", err)
+	}
+	return ctx.GetStub().PutPrivateData(privateCollectionName, assetKey, jsonAsBytes)
+}
+
+func (s *SmartContract) GetKeyPrivateData(ctx contractapi.TransactionContextInterface, assetKey string) (*KeyCIDAsset, error) {
+	mspid, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return nil, fmt.Errorf("error ocurred getting MSPID: %v", err)
+	}
+	privateCollectionName := "_implicit_org_" + mspid
+
+	privateData, err := ctx.GetStub().GetPrivateData(privateCollectionName, assetKey)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read from implicit private collection: %v", err)
+	}
+	if privateData == nil {
+		return nil, fmt.Errorf("data not found in implicit private collection")
+	}
+
+	var jsonData KeyCIDAsset
+	err = json.Unmarshal(privateData, &jsonData)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal JSON: %v", err)
+	}
+
+	return &jsonData, nil
 }
 
 func main() {

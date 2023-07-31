@@ -1,6 +1,5 @@
 const axios = require("axios");
 const crypto = require("crypto");
-const utils = require("./utils");
 
 require("./jsDocTypes");
 
@@ -8,7 +7,7 @@ require("./jsDocTypes");
  *
  * @param {Aggregated_IoT_Data} dataToUpload
  * @param {String} ipfsClusterApiPort
- * @returns
+ * @returns {{status: Number, cid: string, symmetricKey: Buffer}}
  */
 async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
   // ipfs-cluster-ctl pin add --wait ... waits until the IPFS-pinning process is complete in at least 1 peer.
@@ -22,7 +21,6 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
 
   const symmetricKey = generateSymmetricKey();
   const cipherText = encryptPlainText(JSON.stringify(dataToUpload), symmetricKey);
-  const assetName = `${dataToUpload?.device_name}_${dataToUpload?.date}`;
 
   const data = new FormData();
   data.append("json", cipherText);
@@ -41,8 +39,7 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
   }
 
   if (cid != "error") {
-    // All is succesful, save CID, Asset Name, Encryption Key to local machine.
-    utils.saveToLocalKeyMap(cid, assetName, symmetricKey);
+    // Success
     return { status: 0, cid: cid, symmetricKey: symmetricKey };
   } else {
     return {

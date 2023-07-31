@@ -224,7 +224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line76">line 76</a>
+        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line82">line 82</a>
     </li></ul></dd>
     
 
@@ -383,7 +383,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line77">line 77</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -539,7 +539,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line62">line 62</a>
+        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -694,7 +694,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line118">line 118</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line123">line 123</a>
     </li></ul></dd>
     
 
@@ -724,6 +724,189 @@
         
 <div class="param-desc">
     filteredData Object with two entries, keep and upload, where keep is the Object to keep and Upload contains the JSON that should be uploaded to IPFS to persist, as it is old data.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="gatewayAPI"><span class="type-signature">(async) </span>gatewayAPI<span class="signature">(gatewayPort, peerHostAlias)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a gRPC client connection to the local organisation peer running the Fabric Gateway.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gatewayPort</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>peerHostAlias</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fabricGatewayClient.js.html">fabricGatewayClient.js</a>, <a href="fabricGatewayClient.js.html#line52">line 52</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Object that has two fields: gateway and client. The client is the gRPC connection client.
+The gateway is the gateway object used to interact with the Fabric network.
 </div>
 
 
@@ -853,7 +1036,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line134">line 134</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line139">line 139</a>
     </li></ul></dd>
     
 
@@ -1010,7 +1193,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line94">line 94</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line99">line 99</a>
     </li></ul></dd>
     
 
@@ -1161,7 +1344,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line60">line 60</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -1339,7 +1522,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line50">line 50</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -1499,7 +1682,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line10">line 10</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -1557,7 +1740,7 @@ Otherwise, returns false.
     
 
     
-    <h4 class="name" id="saveToLocalKeyMap"><span class="type-signature"></span>saveToLocalKeyMap<span class="signature">(cid, assetName, symmetricKey, path)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="saveToLocalKeyMap"><span class="type-signature"></span>saveToLocalKeyMap<span class="signature">(cid, assetName, symmetricKey, keymapPath)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1666,7 +1849,7 @@ Otherwise, returns false.
 
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>keymapPath</code></td>
             
 
             <td class="type">
@@ -1723,7 +1906,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line146">line 146</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -1759,7 +1942,190 @@ Otherwise, returns false.
     
 
     
-    <h4 class="name" id="uploadToIPFS"><span class="type-signature">(async) </span>uploadToIPFS<span class="signature">(dataToUpload)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="uploadDataAsAsset"><span class="type-signature">(async) </span>uploadDataAsAsset<span class="signature">(deviceName, cid, date)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Submits a blocking synchronous transaction
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>deviceName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fabricGatewayClient.js.html">fabricGatewayClient.js</a>, <a href="fabricGatewayClient.js.html#line137">line 137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="uploadToIPFS"><span class="type-signature">(async) </span>uploadToIPFS<span class="signature">(dataToUpload, ipfsClusterApiPort)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -1819,6 +2185,29 @@ Otherwise, returns false.
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>ipfsClusterApiPort</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1856,7 +2245,7 @@ Otherwise, returns false.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line11">line 11</a>
+        <a href="ipfsUtils.js.html">ipfsUtils.js</a>, <a href="ipfsUtils.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -1881,6 +2270,24 @@ Otherwise, returns false.
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -2072,13 +2479,13 @@ Otherwise, returns false.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decryptToPlainText">decryptToPlainText</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#encryptPlainText">encryptPlainText</a></li><li><a href="global.html#filterData">filterData</a></li><li><a href="global.html#isTodaysDate">isTodaysDate</a></li><li><a href="global.html#keepPreviousData">keepPreviousData</a></li><li><a href="global.html#loadFileAsObject">loadFileAsObject</a></li><li><a href="global.html#locallyStoreJSON">locallyStoreJSON</a></li><li><a href="global.html#processDataInput">processDataInput</a></li><li><a href="global.html#saveToLocalKeyMap">saveToLocalKeyMap</a></li><li><a href="global.html#uploadToIPFS">uploadToIPFS</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decryptToPlainText">decryptToPlainText</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#encryptPlainText">encryptPlainText</a></li><li><a href="global.html#filterData">filterData</a></li><li><a href="global.html#gatewayAPI">gatewayAPI</a></li><li><a href="global.html#isTodaysDate">isTodaysDate</a></li><li><a href="global.html#keepPreviousData">keepPreviousData</a></li><li><a href="global.html#loadFileAsObject">loadFileAsObject</a></li><li><a href="global.html#locallyStoreJSON">locallyStoreJSON</a></li><li><a href="global.html#processDataInput">processDataInput</a></li><li><a href="global.html#saveToLocalKeyMap">saveToLocalKeyMap</a></li><li><a href="global.html#uploadDataAsAsset">uploadDataAsAsset</a></li><li><a href="global.html#uploadToIPFS">uploadToIPFS</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Jul 24 2023 17:46:12 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Jul 31 2023 15:51:44 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

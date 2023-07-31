@@ -4,13 +4,14 @@ const path = require("node:path");
 
 /**
  * Processes the JSON object recieved in exposed POST endpoint.
+ * Adds readings to the existing records for that device, or if they don't exist creates a new entry and pushes the devices measurements.
  * @param {Object} data The new IoT data that just got pushed to the local gateway server.
  * @param {Aggregated_IoT_Data} dailyStorage JavaScript Object that is used to aggregate daily data of the various IoT devices on the local network.
  * @returns {Object} Object with status_code, and message, indicating the status of the processing, a message if an error occurred.
  */
 function processDataInput(data, dailyStorage) {
-  // get name of iot device from field in data
-  // strip name field from the data json as it is superflous and will use extra storage
+  // Gets name of iot device from field in data
+  // strip name field from the data json as it is superflous and will use up extra storage
   // check if this device has data for the day, if so, append the new data to the array
   // if not, create new key value pair where key is name of the iot device, and the value will be an array of size 1 with the data.
   // return an object with the status_code (0 for success, != 0 for fail), message ("Success" for 0, <reason> for != 0), and a newDailyStorage object where the processed data is appended.
@@ -24,8 +25,12 @@ function processDataInput(data, dailyStorage) {
       };
   }
 
-  //CREATE ERROR FOR NOT FINDING DEVICE NAME
   const nameOfDevice = data?.deviceName;
+  if (nameOfDevice == null)
+    return {
+      status_code: 1,
+      message: "ERROR: Missing device name in .deviceName key of received object.",
+    };
 
   delete data.deviceName; // Delete deviceName field as we don't want to commit this to daily data, it is superflous & would take up storage.
 
@@ -35,7 +40,6 @@ function processDataInput(data, dailyStorage) {
     dailyStorage[nameOfDevice] = [data];
   }
 
-  // CREATE CASE WHERE DATA WOULD BE ADDED, BUT IT IS A NEW DAY NOW SO WE NEED TO UPLOAD THE DATA.
   return { status_code: 0, message: "Data processed succesfully" };
 }
 
@@ -90,32 +94,6 @@ function deleteFile(fileName) {
 }
 
 /**
- * Decides whether to keep previous data loaded from filesystem.
- * If the oldest date for ANY IoT device on the stored file is todays date (according to the ISO 8061 date spec), returns True.
- * Otherwise, returns false.
- * @param {Aggregated_IoT_Data} data
- * @returns {Boolean}
- */
-function keepPreviousData(data) {
-  for (const [key, val] of Object.entries(data)) {
-    if (Array.isArray(val)) {
-      const oldestSavedDate = new Date(val[0]?.time).toISOString().slice(0, 10);
-      if (isTodaysDate(oldestSavedDate)) {
-        console.log(
-          "Found saved file that has a data entry where the oldest date is today, so keeping this file!"
-        );
-        return true;
-      }
-    }
-  }
-
-  console.log(
-    "Saved file found is too old, discarding it and starting from a clean slate for todays data."
-  );
-  return false;
-}
-
-/**
  *
  * @param {Aggregated_IoT_Data} originalSavedData
  * @returns {{keep: Aggregated_IoT_Data, upload: Aggregated_IoT_Data}} filteredData Object with two entries, keep and upload, where keep is the Object to keep and Upload contains the JSON that should be uploaded to IPFS to persist, as it is old data.
@@ -141,58 +119,13 @@ function isTodaysDate(date) {
   return date === todaysDate;
 }
 
-/**
- *
- * @param {String} cid
- * @param {String} assetName
- * @param {*} symmetricKey
- * @param {String} keymapPath
- */
-function saveToLocalKeyMap(cid, assetName, symmetricKey, keymapPath) {
-  if (keymapPath == null) {
-    keymapPath = "./organisation-keymap.json";
-  }
-  const filePath = path.join(__dirname, "organisation-keymap.json");
-
-  symmetricKey = symmetricKey.toString("base64");
-
-  try {
-    let existingKeyMapRaw = fs.readFileSync(filePath);
-    let existingKeyMap = JSON.parse(existingKeyMapRaw);
-    existingKeyMap[assetName] = { cid, assetName, symmetricKey };
-    fs.writeFileSync(filePath, JSON.stringify(existingKeyMap));
-  } catch {
-    let existingKeyMap = { [assetName]: { cid, assetName, symmetricKey } };
-    fs.writeFileSync(filePath, JSON.stringify(existingKeyMap));
-  }
-}
-
-function getKeyFromLocalKeyMap(stateId, keymapPath) {
-  if (keymapPath == null) {
-    keymapPath = "./organisation-keymap.json";
-  }
-  const filePath = path.join(__dirname, "organisation-keymap.json");
-
-  try {
-    let existingKeyMapRaw = fs.readFileSync(filePath);
-    let existingKeyMap = JSON.parse(existingKeyMapRaw);
-    return existingKeyMap[stateId].symmetricKey;
-  } catch (error) {
-    console.error("ERROR, Failed to get symmetric key from stateId in localkeymap: ", error);
-    return null;
-  }
-}
-
 const utils = {
   processDataInput,
   envOrDefault,
   locallyStoreJSON,
   loadFileAsObject,
   deleteFile,
-  keepPreviousData,
   filterData,
-  saveToLocalKeyMap,
-  getKeyFromLocalKeyMap,
 };
 
 module.exports = utils;
