@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 require("./jsDocTypes");
 const utils = require("./utils");
 const ipfsUtils = require("./ipfsUtils");
@@ -8,6 +9,7 @@ const { default: axios } = require("axios");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const UPDATE_POLL_FREQUENCY = utils.envOrDefault("LOCAL_GATEWAY_UPDATE_POLL_FREQUENCY", 10);
 const PORT = utils.envOrDefault("LOCAL_GATEWAY_PORT", 7500);

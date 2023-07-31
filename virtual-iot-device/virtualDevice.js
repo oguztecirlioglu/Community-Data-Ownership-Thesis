@@ -12,7 +12,7 @@ const API_PORT = utils.envOrDefault("LOCAL_GATEWAY_PORT", 7500);
 const INTERVAL_SECONDS = utils.envOrDefault("VIRTUAL_DEVICE_INTERVAL_SECONDS", 5);
 
 /** @global */
-const PORT = utils.envOrDefault("VIRTUAL_DEVICE_PORT", 3000);
+const PORT = utils.envOrDefault("VIRTUAL_DEVICE_PORT", 3003);
 
 /** @global */
 const RANDOMNESS_AMOUNT = utils.envOrDefault("VIRTUAL_DEVICE_RANDOMNESS_AMOUNT", 0);
