@@ -193,6 +193,16 @@ async function main() {
       }
     });
 
+    app.get("/fabric/getMyOrg", async (req, res) => {
+      try {
+        const result = gateway.getIdentity()?.mspId;
+        res.status(200).send({ mspid: result });
+      } catch (error) {
+        console.error("******** FAILED to get all assets:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
     app.listen(PORT, () => {
       console.log(`Local Gateway running on ${PORT}`);
     });

@@ -14,9 +14,10 @@ type SmartContract struct {
 }
 
 type DataAsset struct {
-	AssetName string `json:"assetName"`
-	Date      string `json:"date"`
-	IPFS_CID  string `json:"IPFS_CID"`
+	AssetName    string `json:"assetName"`
+	Date         string `json:"date"`
+	IPFS_CID     string `json:"IPFS_CID"`
+	UploadingOrg string `json:"uploadingOrg"`
 }
 
 type KeyCIDAsset struct {
@@ -82,10 +83,16 @@ func (s *SmartContract) UploadDataAsAsset(ctx contractapi.TransactionContextInte
 		return fmt.Errorf("the asset %s already exists", id)
 	}
 
+	mspid, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return fmt.Errorf("error ocurred getting MSPID: %v", err)
+	}
+
 	asset := DataAsset{
-		AssetName: deviceName,
-		Date:      date,
-		IPFS_CID:  cid,
+		AssetName:    deviceName,
+		Date:         date,
+		IPFS_CID:     cid,
+		UploadingOrg: mspid,
 	}
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
