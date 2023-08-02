@@ -4,56 +4,55 @@ function command_exists() {
 }
 
 function generateOrgs() {
-    rm -rf organizations
+  rm -rf organizations
 
-    echoln "Generating crypto material for Org1"
-    cryptogen generate --config=compose/crypto-config-org1.yaml --output="organizations"
-    if [ $? -ne 0 ]; then
-      echoln "Failed to generate certificate for org1"
-      exit 1
-    fi
+  echoln "Generating crypto material for Org1"
+  cryptogen generate --config=compose/crypto-config-org1.yaml --output="organizations"
+  if [ $? -ne 0 ]; then
+    echoln "Failed to generate certificate for org1"
+    exit 1
+  fi
 
-    echoln "Generating crypto material for Orderer"
-    cryptogen generate --config=compose/crypto-config-orderer.yaml --output="organizations"
-    if [ $? -ne 0 ]; then
-      echoln "Failed to generate certificate for Orderer"
-      exit 1
-    fi
+  echoln "Generating crypto material for Orderer"
+  cryptogen generate --config=compose/crypto-config-orderer.yaml --output="organizations"
+  if [ $? -ne 0 ]; then
+    echoln "Failed to generate certificate for Orderer"
+    exit 1
+  fi
 
-    echoln "Successfully generated all Org material"
+  echoln "Successfully generated all Org material"
 }
 
 function setGeneralVars() {
-    export CORE_PEER_TLS_ENABLED=true
-    export ORDERER_CA=${PWD}/organizations/ordererOrganizations/fabrictest.com/tlsca/tlsca.fabrictest.com-cert.pem
-    export PEER0_ORG1_CA=${PWD}/organizations/peerOrganizations/org1.fabrictest.com/tlsca/tlsca.org1.fabrictest.com-cert.pem
-    export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/server.crt
-    export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/server.key
-    
-    export CHANNEL_NAME=mychannel
-    # export DOCKER_SOCK=/var/run/docker.sock
+  export CORE_PEER_TLS_ENABLED=true
+  export ORDERER_CA=${PWD}/organizations/ordererOrganizations/fabrictest.com/tlsca/tlsca.fabrictest.com-cert.pem
+  export PEER0_ORG1_CA=${PWD}/organizations/peerOrganizations/org1.fabrictest.com/tlsca/tlsca.org1.fabrictest.com-cert.pem
+  export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/server.crt
+  export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/server.key
 
-    export CC_SRC_PATH="ipfscc"
-    export CC_NAME="ipfscc"
-    export CC_VERSION="1.0"
-    export CC_SRC_LANGUAGE="go"
-    export CC_SEQUENCE="1"
-    export CC_END_POLICY="NA"
-    export CC_COLL_CONFIG="NA"
-    export CC_INIT_FCN="NA"
-    export CC_RUNTIME_LANGUAGE=golang
+  export CHANNEL_NAME=mychannel
+  # export DOCKER_SOCK=/var/run/docker.sock
 
-    
-    export DELAY="3"
-    export MAX_RETRY="5"
-   
+  export CC_SRC_PATH="ipfscc"
+  export CC_NAME="ipfscc"
+  export CC_VERSION="1.0"
+  export CC_SRC_LANGUAGE="go"
+  export CC_SEQUENCE="1"
+  export CC_END_POLICY="NA"
+  export CC_COLL_CONFIG="NA"
+  export CC_INIT_FCN="NA"
+  export CC_RUNTIME_LANGUAGE=golang
+
+  export DELAY="3"
+  export MAX_RETRY="5"
+
 }
 
 function setOrg1Vars() {
-    export CORE_PEER_LOCALMSPID="Org1MSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.fabrictest.com/users/Admin@org1.fabrictest.com/msp
-    export CORE_PEER_ADDRESS=localhost:7051
+  export CORE_PEER_LOCALMSPID="Org1MSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
+  export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.fabrictest.com/users/Admin@org1.fabrictest.com/msp
+  export CORE_PEER_ADDRESS=localhost:7051
 }
 
 function echoln() {
@@ -64,23 +63,23 @@ function checkAndThrowError() {
   code=$1
   errorMessage=$2
   if [ $code -ne 0 ]; then
-      # ANSI escape code for red color
-      red='\033[0;31m'
-      # ANSI escape code to reset text color
-      reset='\033[0m'
+    # ANSI escape code for red color
+    red='\033[0;31m'
+    # ANSI escape code to reset text color
+    reset='\033[0m'
 
-      # Print the error message in red color and exit the script
-      echo -e "${red}Error: ${errorMessage}${reset}" >&2
-      exit 1
+    # Print the error message in red color and exit the script
+    echo -e "${red}Error: ${errorMessage}${reset}" >&2
+    exit 1
   fi
 }
 
 if [ "$1" = "down" ]; then
-    echoln "\n\nBringing network down!\n\n"
-    docker-compose -f ./compose/docker-compose.yaml down
-    rm -rf container-data channel-artifacts
-    echoln "\n\nNetwork down successfully\n\n"
-    exit 0
+  echoln "\n\nBringing network down!\n\n"
+  docker-compose -f ./compose/docker-compose.yaml down
+  rm -rf container-data channel-artifacts
+  echoln "\n\nNetwork down successfully\n\n"
+  exit 0
 fi
 
 # Check if "bin" directory doesn't exist and install-fabric.sh doesn't exist
@@ -119,7 +118,6 @@ setOrg1Vars
 
 SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
 DOCKER_SOCK="${SOCK##unix://}"
-
 
 docker compose -f ./compose/docker-compose.yaml down
 
@@ -160,13 +158,11 @@ pushd $CC_SRC_PATH
 GO111MODULE=on go mod vendor
 popd
 
-
 echoln "Package Chaincode"
 peer lifecycle chaincode package "$CC_SRC_PATH/$CC_NAME.tar.gz" -p ${CC_SRC_PATH} --lang golang --label ${CC_NAME}_${CC_VERSION}
 checkAndThrowError $? "Chaincode package failed"
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid "$CC_SRC_PATH/$CC_NAME.tar.gz")
 echoln "Chaincode Packaged"
-
 
 echoln "Install and approve chaincode for org"
 
@@ -176,14 +172,9 @@ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameO
 checkAndThrowError $? "Chaincode install and approve failed"
 echoln "Chaincode installed and approved for org"
 
-
-
 echoln "Commit chaincode"
 
-peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.fabrictest.com --tls --cafile "$ORDERER_CA" --channelID $CHANNEL_NAME --name $CC_NAME --peerAddresses localhost:7051 --tlsRootCertFiles "$PEER0_ORG1_CA" --version $CC_VERSION --sequence 1 
+peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.fabrictest.com --tls --cafile "$ORDERER_CA" --channelID $CHANNEL_NAME --name $CC_NAME --peerAddresses localhost:7051 --tlsRootCertFiles "$PEER0_ORG1_CA" --version $CC_VERSION --sequence 1
 checkAndThrowError $? "Chaincode commit failed"
 
 echoln "Succesfully committed chaincode"
-
-
-# peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.fabrictest.com --tls --cafile "$ORDERER_CA" -C mychannel -n ipfscc --peerAddresses localhost:7051 --tlsRootCertFiles "$PEER0_ORG1_CA" -c '{"function":"InitLedger","Args":[]}'

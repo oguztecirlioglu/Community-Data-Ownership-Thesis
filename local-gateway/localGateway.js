@@ -178,7 +178,17 @@ async function main() {
     });
 
     // Get all assets on the ledger that belong to the Org of the connected gateway.
-    app.get("/fabric/getAllOrgAssets", async (req, res) => {});
+    app.get("/fabric/getMyOrgsAssets", async (req, res) => {
+      try {
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const contract = network.getContract(CHAINCODE_NAME);
+        const result = await fabricGatewayClient.getMyOrgsAssets(contract);
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("******** FAILED to get all assets:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
 
     // Gets all assets on the ledger, but doesn't decrypt and show actual IPFS content, just entries on the ledger (pointers to data, which device etc.).
     app.get("/fabric/getAllAssets", async (req, res) => {

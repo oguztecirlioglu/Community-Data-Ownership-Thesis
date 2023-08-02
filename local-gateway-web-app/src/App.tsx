@@ -36,7 +36,7 @@ const defaultColDefs: ColDef = {
 };
 
 function App() {
-  const [allOrgAsset, setAllOrgAsset] = React.useState(null);
+  const [otherOrgsAssets, setOtherOrgsAssets] = React.useState(null);
   const [myOrgAsset, setMyOrgAsset] = React.useState(null);
   const [assetData, setAssetData] = React.useState<null | { data: any }>(null);
   const [tableRows, setTableRows] = React.useState<null | any>([]);
@@ -222,10 +222,11 @@ function App() {
 
   useEffect(() => {
     const endpoint = "http://localhost:7500/fabric/getAllAssets";
-    fetchData(endpoint, setAllOrgAsset);
+    // const endpoint = "http://localhost:7500/fabric/getOtherOrgsAssets";
+    fetchData(endpoint, setOtherOrgsAssets);
     const intervalInSeconds = 60;
     const interval = setInterval(
-      fetchData.bind(null, endpoint, setAllOrgAsset),
+      fetchData.bind(null, endpoint, setOtherOrgsAssets),
       intervalInSeconds * 1000
     );
 
@@ -233,7 +234,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const endpoint = "http://localhost:7500/fabric/getAllAssets";
+    const endpoint = "http://localhost:7500/fabric/getMyOrgsAssets";
     fetchData(endpoint, setMyOrgAsset);
     const intervalInSeconds = 60;
     const interval = setInterval(
@@ -284,7 +285,7 @@ function App() {
         </AppBar>
         <Grid container spacing={2}>
           <Grid item md={3} xs={12}>
-            <AssetContainer title="All Orgs Assets" data={allOrgAsset}></AssetContainer>
+            <AssetContainer title="Other Orgs Assets" data={otherOrgsAssets}></AssetContainer>
           </Grid>
           <Grid item md={3} xs={12}>
             <AssetContainer

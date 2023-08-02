@@ -109,6 +109,24 @@ async function getAllAssets(contract) {
   return result;
 }
 
+async function getMyOrgsAssets(contract) {
+  console.log(
+    "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
+  );
+  const resultBytes = await contract.evaluateTransaction("GetMyOrgsAssets");
+  const resultJson = utf8Decoder.decode(resultBytes);
+
+  // Check if the resultJson is empty (no data on the ledger)
+  if (!resultJson) {
+    console.log("*** No assets found on the ledger.");
+    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+  }
+
+  const result = JSON.parse(resultJson);
+  console.log("*** Result:", result);
+  return result;
+}
+
 // Need to think about encryption keys as well
 /**
  * Submits a blocking synchronous transaction
@@ -145,11 +163,11 @@ async function uploadKeyPrivateData(contract, deviceName, IPFS_CID, date, symmet
   }
 }
 
-// GetKeyPrivateData(ctx contractapi.TransactionContextInterface, assetKey string)
-async function getKeyPrivateData(contract, assetKey) {
+// GetKeyPrivateData(ctx contractapi.TransactionContextInterface, assetId string)
+async function getKeyPrivateData(contract, assetId) {
   try {
     // Need to do something with transient here.
-    const resultBytes = await contract.submitTransaction("GetKeyPrivateData", assetKey);
+    const resultBytes = await contract.submitTransaction("GetKeyPrivateData", assetId);
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
     console.log("*** Data successfully fetched from private implicit collection!");
@@ -177,6 +195,7 @@ async function getAssetByID(contract, assetId) {
 const fabricGatewayClient = {
   gatewayAPI,
   getAllAssets,
+  getMyOrgsAssets,
   getAssetByID,
   uploadDataAsAsset,
   uploadKeyPrivateData,
