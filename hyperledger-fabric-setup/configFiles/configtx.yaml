@@ -72,6 +72,45 @@ Organizations:
         Type: Signature
         Rule: "OR('Org1MSP.peer')"
 
+    AnchorPeers:
+      # AnchorPeers defines the location of peers which can be used
+      # for cross org gossip communication, or Service Discovery
+      - Host: peer0.org1.fabrictest.com
+        Port: 7051
+
+  - &Org2
+    # DefaultOrg defines the organization which is used in the sampleconfig
+    # of the fabric.git development environment
+    Name: Org2MSP
+
+    # ID to load the MSP definition as
+    ID: Org2MSP
+
+    MSPDir: ../organizations/peerOrganizations/org2.fabrictest.com/msp
+
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org2MSP.peer')"
+
+    AnchorPeers:
+      # AnchorPeers defines the location of peers which can be used
+      # for cross org gossip communication, or Service Discovery
+      - Host: peer0.org2.fabrictest.com
+        Port: 9051
+
 ################################################################################
 #
 #   SECTION: Capabilities
@@ -267,6 +306,7 @@ Channel: &ChannelDefaults
 #
 ################################################################################
 Profiles:
+  ###### First Profile #########################################################
   OneOrgOneOrdGenesis:
     <<: *ChannelDefaults
     Orderer:
@@ -278,4 +318,18 @@ Profiles:
       <<: *ApplicationDefaults
       Organizations:
         - *Org1
+      Capabilities: *ApplicationCapabilities
+  ###### Another Profile #######################################################
+  TwoOrgOneOrdGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        - *Org2
       Capabilities: *ApplicationCapabilities

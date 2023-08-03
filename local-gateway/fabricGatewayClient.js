@@ -7,14 +7,8 @@ const path = require("path");
 const { TextDecoder } = require("util");
 
 // Path to crypto materials.
-const cryptoPath = path.resolve(
-  __dirname,
-  "..",
-  "hyperledger-fabric-setup",
-  "organizations",
-  "peerOrganizations",
-  "org1.fabrictest.com"
-);
+const cryptoPath = path.resolve(__dirname, "..", "hyperledger-fabric-setup", "organizations");
+
 // Path to user private key directory.
 const keyDirectoryPath = path.resolve(
   cryptoPath,
@@ -45,14 +39,21 @@ const utf8Decoder = new TextDecoder();
  * @returns {{gateway: Object, client: Object}} Object that has two fields: gateway and client. The client is the gRPC connection client.
  * The gateway is the gateway object used to interact with the Fabric network.
  */
-async function gatewayAPI(gatewayPort, peerHostAlias, mspId) {
+async function gatewayAPI(
+  gatewayPort,
+  peerHostAlias,
+  mspId,
+  tlsCertPath,
+  certPath,
+  keyDirectoryPath
+) {
   // The gRPC client connection should be shared by all Gateway connections to this endpoint.
-  const client = await newGrpcConnection(gatewayPort, peerHostAlias);
+  const client = await newGrpcConnection(gatewayPort, peerHostAlias, tlsCertPath);
 
   const gateway = fabricGateway.connect({
     client,
-    identity: await newIdentity(mspId),
-    signer: await newSigner(),
+    identity: await newIdentity(mspId, certPath),
+    signer: await newSigner(keyDirectoryPath),
     // Default timeouts for different gRPC calls
     evaluateOptions: () => {
       return { deadline: Date.now() + 5000 }; // 5 seconds
@@ -70,8 +71,14 @@ async function gatewayAPI(gatewayPort, peerHostAlias, mspId) {
 
   return { gateway, client };
 }
-
-async function newGrpcConnection(gatewayPort, peerHostAlias) {
+/**
+ *
+ * @param {Number} gatewayPort
+ * @param {String} peerHostAlias
+ * @param {String} tlsCertPath
+ * @returns
+ */
+async function newGrpcConnection(gatewayPort, peerHostAlias, tlsCertPath) {
   const peerEndpoint = `localhost:${gatewayPort}`;
   const tlsRootCert = await fs.promises.readFile(tlsCertPath);
   const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
@@ -79,11 +86,22 @@ async function newGrpcConnection(gatewayPort, peerHostAlias) {
     "grpc.ssl_target_name_override": peerHostAlias,
   });
 }
-async function newIdentity(mspId) {
+/**
+ *
+ * @param {String} mspId
+ * @param {String} certPath
+ * @returns
+ */
+async function newIdentity(mspId, certPath) {
   const credentials = await fs.promises.readFile(certPath);
   return { mspId, credentials };
 }
-async function newSigner() {
+/**
+ *
+ * @param {String} keyDirectoryPath
+ * @returns
+ */
+async function newSigner(keyDirectoryPath) {
   const files = await fs.promises.readdir(keyDirectoryPath);
   const keyPath = path.resolve(keyDirectoryPath, files[0]);
   const privateKeyPem = await fs.promises.readFile(keyPath);

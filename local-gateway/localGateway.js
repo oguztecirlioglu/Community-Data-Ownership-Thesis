@@ -6,6 +6,7 @@ const ipfsUtils = require("./ipfsUtils");
 const fabricGatewayClient = require("./fabricGatewayClient");
 const crypto = require("crypto");
 const { default: axios } = require("axios");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
@@ -22,7 +23,52 @@ const CHAINCODE_NAME = utils.envOrDefault("FABRIC_CHAINCODE_NAME", "ipfscc");
 const FABRIC_GATEWAY_PORT = utils.envOrDefault("FABRIC_GATEWAY_PORT", 7051);
 const FABRIC_PEER_ALIAS = utils.envOrDefault("FABRIC_PEER_ALIAS", "peer0.org1.fabrictest.com");
 const FABRIC_MSPID = utils.envOrDefault("FABRIC_MSPID", "Org1MSP");
+const ORG_NUMBER = utils.envOrDefault("ORG_NUMBER", 1);
 
+const CRYPTO_MATERIAL_PATH = path.resolve(
+  __dirname,
+  "..",
+  "hyperledger-fabric-setup",
+  "organizations"
+);
+
+const FABRIC_TLS_CERT_PATH = utils.envOrDefault(
+  "FABRIC_TLS_CERT_PATH",
+  path.resolve(
+    CRYPTO_MATERIAL_PATH,
+    "peerOrganizations",
+    `org${ORG_NUMBER}.fabrictest.com`,
+    "peers",
+    `peer0.org${ORG_NUMBER}.fabrictest.com`,
+    "tls",
+    "ca.crt"
+  )
+);
+const FABRIC_CERT_PATH = utils.envOrDefault(
+  "FABRIC_CERT_PATH",
+  path.resolve(
+    CRYPTO_MATERIAL_PATH,
+    "peerOrganizations",
+    `org${ORG_NUMBER}.fabrictest.com`,
+    "users",
+    `User1@org${ORG_NUMBER}.fabrictest.com`,
+    "msp",
+    "signcerts",
+    `User1@org${ORG_NUMBER}.fabrictest.com-cert.pem`
+  )
+);
+const FABRIC_KEY_PATH = utils.envOrDefault(
+  "FABRIC_KEY_PATH",
+  path.resolve(
+    CRYPTO_MATERIAL_PATH,
+    "peerOrganizations",
+    `org${ORG_NUMBER}.fabrictest.com`,
+    "users",
+    `User1@org${ORG_NUMBER}.fabrictest.com`,
+    "msp",
+    "keystore"
+  )
+);
 /* 
 The previouslySavedData is only to be saved when the app closes or crashes. Once it's loaded, we only use the in memory object.
 Check if any of the keys have values older than today. If so, upload that entire key-value pair to IPFS and delete it from the object.
@@ -109,7 +155,10 @@ async function main() {
       const { gateway: gtwy, client: clnt } = await fabricGatewayClient.gatewayAPI(
         FABRIC_GATEWAY_PORT,
         FABRIC_PEER_ALIAS,
-        FABRIC_MSPID
+        FABRIC_MSPID,
+        FABRIC_TLS_CERT_PATH,
+        FABRIC_CERT_PATH,
+        FABRIC_KEY_PATH
       );
       gateway = gtwy;
       client = clnt;
