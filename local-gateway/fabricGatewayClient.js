@@ -109,6 +109,24 @@ async function newSigner(keyDirectoryPath) {
   return fabricGateway.signers.newPrivateKeySigner(privateKey);
 }
 
+async function getAllDataAssets(contract) {
+  console.log(
+    "\n--> Evaluate Transaction: GetAllDataAssets, function returns all the current assets on the ledger"
+  );
+  const resultBytes = await contract.evaluateTransaction("GetAllDataAssets");
+  const resultJson = utf8Decoder.decode(resultBytes);
+
+  // Check if the resultJson is empty (no data on the ledger)
+  if (!resultJson) {
+    console.log("*** No assets found on the ledger.");
+    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+  }
+
+  const result = JSON.parse(resultJson);
+  console.log("*** Result:", result);
+  return result;
+}
+
 async function getAllAssets(contract) {
   console.log(
     "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
@@ -127,11 +145,29 @@ async function getAllAssets(contract) {
   return result;
 }
 
-async function getMyOrgsAssets(contract) {
+async function getMyOrgsDataAssets(contract) {
   console.log(
-    "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
+    "\n--> Evaluate Transaction: GetMyOrgsDataAssets, function returns all the current assets on the ledger"
   );
-  const resultBytes = await contract.evaluateTransaction("GetMyOrgsAssets");
+  const resultBytes = await contract.evaluateTransaction("GetMyOrgsDataAssets");
+  const resultJson = utf8Decoder.decode(resultBytes);
+
+  // Check if the resultJson is empty (no data on the ledger)
+  if (!resultJson) {
+    console.log("*** No assets found on the ledger.");
+    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+  }
+
+  const result = JSON.parse(resultJson);
+  console.log("*** Result:", result);
+  return result;
+}
+
+async function getOtherOrgsDataAssets(contract) {
+  console.log(
+    "\n--> Evaluate Transaction: GetOtherOrgsDataAssets, function returns all the current assets on the ledger"
+  );
+  const resultBytes = await contract.evaluateTransaction("GetOtherOrgsDataAssets");
   const resultJson = utf8Decoder.decode(resultBytes);
 
   // Check if the resultJson is empty (no data on the ledger)
@@ -196,9 +232,6 @@ async function getKeyPrivateData(contract, assetId) {
 }
 
 async function getAssetByID(contract, assetId) {
-  console.log(
-    "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
-  );
   try {
     const resultBytes = await contract.evaluateTransaction("GetAssetByID", assetId);
     const resultJson = utf8Decoder.decode(resultBytes);
@@ -210,13 +243,28 @@ async function getAssetByID(contract, assetId) {
   }
 }
 
+async function uploadExchange(contract, name) {
+  console.log(
+    `\n--> Submit Transaction: Upload Exchange Data, creates a new asset with ID: transaction_${name}`
+  );
+  try {
+    await contract.submitTransaction("UploadExchange", name);
+    console.log("*** Transaction committed successfully");
+  } catch (error) {
+    console.log("*** Error during UploadDataAsAsset: \n", error);
+  }
+}
+
 const fabricGatewayClient = {
   gatewayAPI,
   getAllAssets,
-  getMyOrgsAssets,
+  getAllDataAssets,
+  getMyOrgsDataAssets,
+  getOtherOrgsDataAssets,
   getAssetByID,
   uploadDataAsAsset,
   uploadKeyPrivateData,
+  uploadExchange,
   getKeyPrivateData,
 };
 

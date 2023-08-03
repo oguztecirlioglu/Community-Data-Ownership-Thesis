@@ -227,11 +227,24 @@ async function main() {
     });
 
     // Get all assets on the ledger that belong to the Org of the connected gateway.
-    app.get("/fabric/getMyOrgsAssets", async (req, res) => {
+    app.get("/fabric/getMyOrgsDataAssets", async (req, res) => {
       try {
         const network = gateway.getNetwork(CHANNEL_NAME);
         const contract = network.getContract(CHAINCODE_NAME);
-        const result = await fabricGatewayClient.getMyOrgsAssets(contract);
+        const result = await fabricGatewayClient.getMyOrgsDataAssets(contract);
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("******** FAILED to get all assets:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
+    // Get all assets on the ledger that belong to Orgs that aren't of the client connected to the gateway.
+    app.get("/fabric/getOtherOrgsDataAssets", async (req, res) => {
+      try {
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const contract = network.getContract(CHAINCODE_NAME);
+        const result = await fabricGatewayClient.getOtherOrgsDataAssets(contract);
         res.status(200).send(result);
       } catch (error) {
         console.error("******** FAILED to get all assets:", error);
@@ -240,6 +253,18 @@ async function main() {
     });
 
     // Gets all assets on the ledger, but doesn't decrypt and show actual IPFS content, just entries on the ledger (pointers to data, which device etc.).
+    app.get("/fabric/getAllDataAssets", async (req, res) => {
+      try {
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const contract = network.getContract(CHAINCODE_NAME);
+        const result = await fabricGatewayClient.getAllDataAssets(contract);
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("******** FAILED to get all assets:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
     app.get("/fabric/getAllAssets", async (req, res) => {
       try {
         const network = gateway.getNetwork(CHANNEL_NAME);
@@ -256,6 +281,19 @@ async function main() {
       try {
         const result = gateway.getIdentity()?.mspId;
         res.status(200).send({ mspid: result });
+      } catch (error) {
+        console.error("******** FAILED to get all assets:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
+    app.get("/fabric/uploadExchange/:name", async (req, res) => {
+      try {
+        const name = req.params.name;
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const contract = network.getContract(CHAINCODE_NAME);
+        const result = await fabricGatewayClient.uploadExchange(contract, name);
+        res.status(200).send(result);
       } catch (error) {
         console.error("******** FAILED to get all assets:", error);
         res.status(500).send(`ERROR: ${error.message}`);

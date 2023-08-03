@@ -221,8 +221,7 @@ function App() {
   }, [assetData]);
 
   useEffect(() => {
-    const endpoint = "http://localhost:7500/fabric/getAllAssets";
-    // const endpoint = "http://localhost:7500/fabric/getOtherOrgsAssets";
+    const endpoint = "http://localhost:7500/fabric/getOtherOrgsDataAssets";
     fetchData(endpoint, setOtherOrgsAssets);
     const intervalInSeconds = 60;
     const interval = setInterval(
@@ -234,7 +233,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const endpoint = "http://localhost:7500/fabric/getMyOrgsAssets";
+    const endpoint = "http://localhost:7500/fabric/getMyOrgsDataAssets";
     fetchData(endpoint, setMyOrgAsset);
     const intervalInSeconds = 60;
     const interval = setInterval(

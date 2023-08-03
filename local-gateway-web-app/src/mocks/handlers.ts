@@ -219,7 +219,7 @@ export const handlers = [
     // Return the mock data as the response
     return res(ctx.json(mockData));
   }),
-  rest.get("http://localhost:7500/fabric/getAllAssets", (req, res, ctx) => {
+  rest.get("http://localhost:7500/fabric/getAllDataAssets", (req, res, ctx) => {
     // Return the mock data as the response
     return res(ctx.json(mockAllAssets));
   }),
