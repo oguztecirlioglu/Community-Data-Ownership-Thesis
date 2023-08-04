@@ -287,6 +287,35 @@ async function main() {
       }
     });
 
+    app.get("/fabric/getBidsForMyOrg", async (req, res) => {
+      try {
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const contract = network.getContract(CHAINCODE_NAME);
+        const result = await fabricGatewayClient.getBidsForMyOrg(contract);
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("******** FAILED to get bids for this org:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
+    //deviceName date, price
+    app.post("/fabric/bidForData", async (req, res) => {
+      const deviceName = req.body?.deviceName;
+      const date = req.body?.date;
+      const price = req.body?.price;
+      console.log(deviceName, date, price);
+      try {
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const contract = network.getContract(CHAINCODE_NAME);
+        const result = await fabricGatewayClient.bidForData(contract, deviceName, date, price);
+        res.status(200).send(result);
+      } catch (error) {
+        console.error("******** FAILED to bid for data:", error);
+        res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
     app.get("/fabric/uploadExchange/:name", async (req, res) => {
       try {
         const name = req.params.name;

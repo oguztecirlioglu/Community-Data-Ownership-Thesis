@@ -1,34 +1,21 @@
-import React, { useEffect } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import {
-  Button,
   Card,
   CardContent,
-  Divider,
-  Drawer,
-  Grid,
-  IconButton,
+  Typography,
   List,
   ListItem,
-  ListItemButton,
   ListItemText,
-  Toolbar,
+  Divider,
   Tooltip,
+  Button,
+  createTheme,
 } from "@mui/material";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import React, { useEffect } from "react";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import BidsMenu from "./BidsMenu";
-import axios from "axios";
+import { ColDef } from "ag-grid-community";
 
 const MyHeaderComponent = (props: any) => {
   return <div>{`${props?.displayName} (${props?.unit})`}</div>;
@@ -42,14 +29,12 @@ const defaultColDefs: ColDef = {
   resizable: true,
 };
 
-function App() {
+export default function OrgDataPage() {
   const [otherOrgsAssets, setOtherOrgsAssets] = React.useState(null);
   const [myOrgAsset, setMyOrgAsset] = React.useState(null);
   const [assetData, setAssetData] = React.useState<null | { data: any }>(null);
   const [tableRows, setTableRows] = React.useState<null | any>([]);
-  const [bidsForMyOrg, setBidsForMyOrg] = React.useState<null | any>(null);
   const [myOrgName, setMyOrgName] = React.useState<null | string>("Loading org...");
-  const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const gridRef = React.useRef<any>();
 
   const fetchData = async (endpoint: string, setter: Function) => {
@@ -66,19 +51,6 @@ function App() {
   const fetchAssetData = async (assetID: string) => {
     const endpoint = "http://localhost:7500/fabric/getAssetData/" + assetID;
     await fetchData(endpoint, setAssetData);
-  };
-
-  //deviceName, date, price
-  const bidForData = async (deviceName: string, date: string, price: string) => {
-    const endpoint = "http://localhost:7500/fabric/bidForData";
-    const body = { deviceName: deviceName, date: date, price: price };
-    fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
   };
 
   function AssetContainer(props: { title: string; data: any; variant?: string }) {
@@ -228,19 +200,7 @@ function App() {
                 Decrypt and View Data
               </Button>
             </Tooltip>
-          ) : (
-            <Tooltip
-              title={`Bid for data: ${assetObject?.assetName} at the IPFS address: ${assetObject?.IPFS_CID}`}
-            >
-              <Button
-                variant="contained"
-                style={{ textTransform: "none" }}
-                onClick={() => bidForData(assetObject?.assetName, assetObject?.date, "100")}
-              >
-                {"Bid for data, currently putting a arbitrary price"}
-              </Button>
-            </Tooltip>
-          )}
+          ) : null}
         </CardContent>
       </Card>
     );
@@ -305,18 +265,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const endpoint = "http://localhost:7500/fabric/getBidsForMyOrg";
-    fetchData(endpoint, setBidsForMyOrg);
-    const intervalInSeconds = 60;
-    const interval = setInterval(
-      fetchData.bind(null, endpoint, setBidsForMyOrg),
-      intervalInSeconds * 1000
-    );
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
     (async () => {
       try {
         const endpoint = "http://localhost:7500/fabric/getMyOrg";
@@ -342,96 +290,4 @@ function App() {
       },
     },
   });
-
-  const toggleDrawer = (menuState: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (
-      event.type === "keydown" &&
-      ((event as React.KeyboardEvent).key === "Tab" ||
-        (event as React.KeyboardEvent).key === "Shift")
-    ) {
-      return;
-    }
-    setMenuOpen(menuState);
-  };
-
-  const list = (anchor: any) => (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        <ListItem key={"Main Menu"} disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Main Menu"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={"Bids For My Data"} disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Bids For My Data"} />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
-  );
-
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={() => setMenuOpen((prevState) => !prevState)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-              Community Data Viewer
-            </Typography>
-            <Typography variant="h5">{`User belongs to: ${myOrgName}`}</Typography>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          anchor={"left"}
-          open={menuOpen}
-          ModalProps={{ onBackdropClick: () => setMenuOpen(false) }}
-        >
-          {list("left")}
-        </Drawer>
-        <Grid container spacing={2}>
-          <Grid item md={3} xs={12}>
-            <AssetContainer title="Other Orgs Assets" data={otherOrgsAssets}></AssetContainer>
-          </Grid>
-          <Grid item md={3} xs={12}>
-            <AssetContainer
-              title="My Orgs Assets"
-              data={myOrgAsset}
-              variant="myorg"
-            ></AssetContainer>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <BidsMenu bidsForMyOrg={bidsForMyOrg}></BidsMenu>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <AssetDataContainer title="View Asset Data" data={assetData}></AssetDataContainer>
-          </Grid>
-        </Grid>
-      </Box>
-    </ThemeProvider>
-  );
 }
-
-export default App;

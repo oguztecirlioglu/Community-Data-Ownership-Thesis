@@ -221,7 +221,7 @@ async function uploadKeyPrivateData(contract, deviceName, IPFS_CID, date, symmet
 async function getKeyPrivateData(contract, assetId) {
   try {
     // Need to do something with transient here.
-    const resultBytes = await contract.submitTransaction("GetKeyPrivateData", assetId);
+    const resultBytes = await contract.evaluateTransaction("GetKeyPrivateData", assetId);
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
     console.log("*** Data successfully fetched from private implicit collection!");
@@ -240,6 +240,30 @@ async function getAssetByID(contract, assetId) {
     return result;
   } catch (error) {
     console.error("***Error during GetAssetById: \n", error);
+  }
+}
+
+async function getBidsForMyOrg(contract) {
+  try {
+    const resultBytes = await contract.evaluateTransaction("GetBidsForMyOrg");
+    const resultJson = utf8Decoder.decode(resultBytes);
+    if (!resultJson) {
+      console.log("*** No bids found on the ledger for this org.");
+      return { message: "No bids found on the ledger for this org." }; // Return an empty array to indicate no data found
+    }
+    const result = JSON.parse(resultJson);
+    console.log("*** Bids For My Org Received succesfully");
+    return result;
+  } catch (error) {
+    console.error("***Error getting bids for my org: \n", error);
+  }
+}
+
+async function bidForData(contract, deviceName, date, price) {
+  try {
+    await contract.submitTransaction("BidForData", deviceName, date, price);
+  } catch (error) {
+    console.error(`***Error bidding for device ${deviceName}s data:`, error);
   }
 }
 
@@ -262,6 +286,8 @@ const fabricGatewayClient = {
   getMyOrgsDataAssets,
   getOtherOrgsDataAssets,
   getAssetByID,
+  getBidsForMyOrg,
+  bidForData,
   uploadDataAsAsset,
   uploadKeyPrivateData,
   uploadExchange,
