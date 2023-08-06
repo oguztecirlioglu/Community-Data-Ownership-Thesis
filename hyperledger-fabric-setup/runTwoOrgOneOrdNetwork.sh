@@ -60,6 +60,7 @@ function setOrg1Vars() {
   export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
   export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.fabrictest.com/users/Admin@org1.fabrictest.com/msp
   export CORE_PEER_ADDRESS=localhost:7051
+  export ORG_NUMBER=1
 }
 
 function setOrg2Vars() {
@@ -67,6 +68,7 @@ function setOrg2Vars() {
   export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
   export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.fabrictest.com/users/Admin@org2.fabrictest.com/msp
   export CORE_PEER_ADDRESS=localhost:9051
+  export ORG_NUMBER=2
 }
 
 function echoln() {
