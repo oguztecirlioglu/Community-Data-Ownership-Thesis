@@ -74,11 +74,20 @@ function checkAndThrowError() {
   fi
 }
 
+function removeChaincodeImages() {
+  containerTags=$(docker ps -a | grep dev-peer.* | awk '{print $1}')
+  docker container rm $containerTags
+  imageTags=$(docker image ls -a | grep dev-peer.* | awk '{ print $1 }')
+  docker image rm $imageTags
+}
+
 if [ "$1" = "down" ]; then
   echoln "\n\nBringing network down!\n\n"
   docker-compose -f ./compose/docker-compose.yaml down
   rm -rf container-data channel-artifacts
   echoln "\n\nNetwork down successfully\n\n"
+
+  removeChaincodeImages
   exit 0
 fi
 

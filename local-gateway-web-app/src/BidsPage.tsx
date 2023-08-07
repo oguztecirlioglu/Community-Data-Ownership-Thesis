@@ -99,12 +99,13 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
           <>
             <Typography variant="h4">{"Bids"}</Typography>
 
-            {props.bidsData ? (
+            {props.bidsData &&
+            props.bidsData?.message !== "No bids found on the ledger for this org." ? (
               props.bidsData.map((elem: any) => BidViewer(elem))
             ) : (
               <Card sx={{ m: 2 }}>
                 <CardContent>
-                  <Typography>No bids found for your Org!</Typography>
+                  <Typography>No bids found for any data owned by your Org!</Typography>
                 </CardContent>
               </Card>
             )}
@@ -113,9 +114,6 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
       </Card>
     );
   };
-
-  if (props.bidsForMyOrg?.message === "No bids found on the ledger for this org.")
-    return <>{"No bids received yet"}</>;
 
   return (
     <>

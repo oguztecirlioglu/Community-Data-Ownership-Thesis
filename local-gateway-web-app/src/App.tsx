@@ -3,7 +3,6 @@ import AppRoot from "./AppRoot";
 import BidsMenu from "./BidsPage";
 import ErrorPage from "./ErrorPage";
 import React from "react";
-import { endianness } from "os";
 import DataPage from "./DataPage";
 
 export default function AppCopy() {

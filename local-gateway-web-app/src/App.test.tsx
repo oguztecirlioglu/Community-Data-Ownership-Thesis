@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import App from "./AppOld";
+import App from "./App";
 import { server } from "./mocks/server";
 
 beforeAll(() => server.listen());
@@ -15,7 +15,7 @@ test("Renders title", () => {
 
 test("Renders All Orgs Assets", () => {
   render(<App />);
-  const linkElement = screen.getByText(/All Orgs Assets/i);
+  const linkElement = screen.getByText(/Other Orgs Assets/i);
   expect(linkElement).toBeInTheDocument();
 });
 

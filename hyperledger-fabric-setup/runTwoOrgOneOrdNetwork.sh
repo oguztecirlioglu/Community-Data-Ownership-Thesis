@@ -30,6 +30,13 @@ function generateOrgs() {
   echoln "Successfully generated all Org material"
 }
 
+function removeChaincodeImages() {
+  containerTags=$(docker ps -a | grep dev-peer.* | awk '{print $1}')
+  docker container rm $containerTags
+  imageTags=$(docker image ls -a | grep dev-peer.* | awk '{ print $1 }')
+  docker image rm $imageTags
+}
+
 function setGeneralVars() {
   export CORE_PEER_TLS_ENABLED=true
   export ORDERER_CA=${PWD}/organizations/ordererOrganizations/fabrictest.com/tlsca/tlsca.fabrictest.com-cert.pem
@@ -95,6 +102,8 @@ if [ "$1" = "down" ]; then
   docker compose -f ./compose/docker-compose.yaml -f ./compose/docker-compose-org2.yaml down
   rm -rf container-data channel-artifacts
   echoln "\n\nNetwork down successfully\n\n"
+
+  removeChaincodeImages
   exit 0
 fi
 
