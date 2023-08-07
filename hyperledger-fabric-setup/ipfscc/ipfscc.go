@@ -34,11 +34,12 @@ type DataTransaction struct {
 }
 
 type DataBid struct {
-	BiddingOrg      string `json:"biddingOrg"`
-	CurrentOwnerOrg string `json:"currentOwnerOrg"`
-	DeviceName      string `json:"deviceName"`
-	Date            string `json:"date"`
-	Price           string `json:"price"`
+	BiddingOrg            string `json:"biddingOrg"`
+	CurrentOwnerOrg       string `json:"currentOwnerOrg"`
+	DeviceName            string `json:"deviceName"`
+	Date                  string `json:"date"`
+	Price                 string `json:"price"`
+	AdditionalCommitments string `json:"additionalCommitments"`
 }
 
 func CreateAssetID(deviceName string, date string) (assetID string) {
@@ -297,28 +298,29 @@ func (s *SmartContract) AssetExists(ctx contractapi.TransactionContextInterface,
 /*
 Model:
 IoT data prefix:  data_
-DataBid prefix:       bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BidderOrg>
+DataBid prefix:       bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BiddingOrg>
 Data Transfer:    dataTransfer_
 */
 
-func (s *SmartContract) BidForData(ctx contractapi.TransactionContextInterface, deviceName string, date string, price string) error {
+func (s *SmartContract) BidForData(ctx contractapi.TransactionContextInterface, deviceName string, date string, price string, additionalCommitments string) error {
 	currentAssetOwner, err := s.GetAssetOwner(ctx, deviceName, date)
 	if err != nil {
 		return fmt.Errorf("failed to get Asset Owner %v", err)
 	}
-	bidderOrg, err := ctx.GetClientIdentity().GetMSPID()
+	biddingOrg, err := ctx.GetClientIdentity().GetMSPID()
 	if err != nil {
 		return fmt.Errorf("failed to get Client Identity %v", err)
 	}
 
-	bidID := "bid_" + deviceName + "_" + date + "_" + currentAssetOwner + "_" + bidderOrg
+	bidID := "bid_" + deviceName + "_" + date + "_" + currentAssetOwner + "_" + biddingOrg
 
 	bidData := DataBid{
-		BiddingOrg:      bidderOrg,
-		CurrentOwnerOrg: currentAssetOwner,
-		DeviceName:      deviceName,
-		Date:            date,
-		Price:           price,
+		BiddingOrg:            biddingOrg,
+		CurrentOwnerOrg:       currentAssetOwner,
+		DeviceName:            deviceName,
+		Date:                  date,
+		Price:                 price,
+		AdditionalCommitments: additionalCommitments,
 	}
 
 	bidDataBytes, err := json.Marshal(bidData)
@@ -346,7 +348,7 @@ func (s *SmartContract) DeleteAllBidsForThisData(ctx contractapi.TransactionCont
 		key := queryResponse.Key
 		err = ctx.GetStub().DelState(key)
 		if err != nil {
-			return fmt.Errorf("Error deleting state for key: %v", key)
+			return fmt.Errorf("error deleting state for key: %v", key)
 		}
 
 	}
@@ -387,7 +389,8 @@ func (s *SmartContract) GetBidsForMyOrg(ctx contractapi.TransactionContextInterf
 	return bids, nil
 }
 
-func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, bidderOrg string, deviceName string, date string, price string) error {
+func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, biddingOrg string, deviceName string, date string, price string) error {
+	// DataBid prefix: bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BiddingOrg>
 	// make sure the bid i want to accept exists
 	// identify new owner
 	// delete all bids
@@ -396,7 +399,7 @@ func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, b
 	if err != nil {
 		return fmt.Errorf("error ocurred getting MSPID: %v", err)
 	}
-	bidID := "bid_" + deviceName + "_" + date + "_" + mspid + "_" + bidderOrg
+	bidID := "bid_" + deviceName + "_" + date + "_" + mspid + "_" + biddingOrg
 	bidBytes, err := ctx.GetStub().GetState(bidID)
 	if err != nil {
 		return fmt.Errorf("error ocurred getting bid to accept: %v", err)
@@ -404,7 +407,7 @@ func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, b
 	var bidJSON DataBid
 	err = json.Unmarshal(bidBytes, &bidJSON)
 
-	if bidderOrg != bidJSON.BiddingOrg || mspid != bidJSON.CurrentOwnerOrg || price != bidJSON.Price {
+	if biddingOrg != bidJSON.BiddingOrg || mspid != bidJSON.CurrentOwnerOrg || price != bidJSON.Price {
 		return fmt.Errorf("error ocurred processing bid. mismatch between provided bid details, and bid recorded on ledger")
 	}
 	s.DeleteAllBidsForThisData(ctx, mspid, deviceName, date)
@@ -420,11 +423,15 @@ func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, b
 		return fmt.Errorf("failed to unmarshal JSON: %v", err)
 	}
 
-	assetJSON.OwnerOrg = bidderOrg
-
-	_, err = json.Marshal(assetJSON)
+	assetJSON.OwnerOrg = biddingOrg
+	updatedAssetBytes, err := json.Marshal(assetJSON)
 	if err != nil {
 		return fmt.Errorf("failed to marhsal new Asset to JSON: %v", err)
+	}
+
+	err = ctx.GetStub().PutState(assetID, updatedAssetBytes)
+	if err != nil {
+		return fmt.Errorf("failed to put updated asset with new owner to the ledger: %v", err)
 	}
 
 	return nil

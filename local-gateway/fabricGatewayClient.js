@@ -259,23 +259,21 @@ async function getBidsForMyOrg(contract) {
   }
 }
 
-async function bidForData(contract, deviceName, date, price) {
+async function bidForData(contract, deviceName, date, price, additionalCommitments) {
   try {
-    await contract.submitTransaction("BidForData", deviceName, date, price);
+    await contract.submitTransaction("BidForData", deviceName, date, price, additionalCommitments);
+    console.log("*** Bid submitted succesfully");
   } catch (error) {
     console.error(`***Error bidding for device ${deviceName}s data:`, error);
   }
 }
 
-async function uploadExchange(contract, name) {
-  console.log(
-    `\n--> Submit Transaction: Upload Exchange Data, creates a new asset with ID: transaction_${name}`
-  );
+async function acceptBid(contract, biddingOrg, deviceName, date, price) {
   try {
-    await contract.submitTransaction("UploadExchange", name);
-    console.log("*** Transaction committed successfully");
+    console.log(biddingOrg, deviceName, date, price);
+    await contract.submitTransaction("AcceptBid", biddingOrg, deviceName, date, price);
   } catch (error) {
-    console.log("*** Error during UploadDataAsAsset: \n", error);
+    console.error(`***Error accepting bid from ${biddingOrg}, error is:`, error);
   }
 }
 
@@ -288,9 +286,9 @@ const fabricGatewayClient = {
   getAssetByID,
   getBidsForMyOrg,
   bidForData,
+  acceptBid,
   uploadDataAsAsset,
   uploadKeyPrivateData,
-  uploadExchange,
   getKeyPrivateData,
 };
 

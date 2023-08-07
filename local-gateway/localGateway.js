@@ -304,11 +304,17 @@ async function main() {
       const deviceName = req.body?.deviceName;
       const date = req.body?.date;
       const price = req.body?.price;
-      console.log(deviceName, date, price);
+      const additionalCommitments = req.body?.additionalCommitments;
       try {
         const network = gateway.getNetwork(CHANNEL_NAME);
         const contract = network.getContract(CHAINCODE_NAME);
-        const result = await fabricGatewayClient.bidForData(contract, deviceName, date, price);
+        const result = await fabricGatewayClient.bidForData(
+          contract,
+          deviceName,
+          date,
+          price,
+          additionalCommitments
+        );
         res.status(200).send(result);
       } catch (error) {
         console.error("******** FAILED to bid for data:", error);
@@ -316,15 +322,24 @@ async function main() {
       }
     });
 
-    app.get("/fabric/uploadExchange/:name", async (req, res) => {
+    app.post("/fabric/acceptBid", async (req, res) => {
+      const biddingOrg = req.body?.biddingOrg;
+      const deviceName = req.body?.deviceName;
+      const date = req.body?.date;
+      const price = req.body?.price;
       try {
-        const name = req.params.name;
         const network = gateway.getNetwork(CHANNEL_NAME);
         const contract = network.getContract(CHAINCODE_NAME);
-        const result = await fabricGatewayClient.uploadExchange(contract, name);
+        const result = await fabricGatewayClient.acceptBid(
+          contract,
+          biddingOrg,
+          deviceName,
+          date,
+          price
+        );
         res.status(200).send(result);
       } catch (error) {
-        console.error("******** FAILED to get all assets:", error);
+        console.error("******** FAILED to accept bid:", error);
         res.status(500).send(`ERROR: ${error.message}`);
       }
     });

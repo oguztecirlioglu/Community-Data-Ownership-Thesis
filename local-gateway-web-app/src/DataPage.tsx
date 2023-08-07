@@ -128,7 +128,9 @@ export default function DataPage(props: {
               <Button
                 variant="contained"
                 style={{ textTransform: "none" }}
-                onClick={() => bidForData(assetObject?.assetName, assetObject?.date, "100")}
+                onClick={() =>
+                  bidForData(assetObject?.assetName, assetObject?.date, "100", "empty for now")
+                }
               >
                 {"Bid for data, currently putting a arbitrary price"}
               </Button>
@@ -235,9 +237,19 @@ export default function DataPage(props: {
   );
 }
 
-const bidForData = async (deviceName: string, date: string, price: string) => {
+const bidForData = async (
+  deviceName: string,
+  date: string,
+  price: string,
+  additionalCommitments: string
+) => {
   const endpoint = "http://localhost:7500/fabric/bidForData";
-  const body = { deviceName: deviceName, date: date, price: price };
+  const body = {
+    deviceName: deviceName,
+    date: date,
+    price: price,
+    additionalCommitments: additionalCommitments,
+  };
   fetch(endpoint, {
     method: "POST",
     headers: {
