@@ -18,6 +18,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import React from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import UoBLogo from "./assets/uob_transparent.png";
 
 export default function AppRoot({ myOrgName: myOrgName }: { myOrgName: string | null }) {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
@@ -79,6 +80,7 @@ export default function AppRoot({ myOrgName: myOrgName }: { myOrgName: string | 
             <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
               Community Data Viewer
             </Typography>
+            <Box component="img" sx={{ height: 54 }} alt="Logo" src={UoBLogo}></Box>
             <Typography variant="h5">{`User belongs to: ${myOrgName}`}</Typography>
           </Toolbar>
         </AppBar>

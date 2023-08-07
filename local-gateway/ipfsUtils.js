@@ -17,8 +17,6 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
 
   console.log(`\n\nUploading data for IoT Device ${Object.values(dataToUpload)[0]}`);
 
-  console.log(`Compress data`);
-
   const symmetricKey = generateSymmetricKey();
   const cipherText = encryptPlainText(JSON.stringify(dataToUpload), symmetricKey);
 

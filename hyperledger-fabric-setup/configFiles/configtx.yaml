@@ -111,6 +111,33 @@ Organizations:
       - Host: peer0.org2.fabrictest.com
         Port: 9051
 
+  - &Org3 # Comments removed for brevity.
+    Name: Org3MSP
+
+    ID: Org3MSP
+
+    MSPDir: ../organizations/peerOrganizations/org3.fabrictest.com/msp
+
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org3MSP.admin', 'Org3MSP.peer', 'Org3MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org3MSP.admin', 'Org3MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org3MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org3MSP.peer')"
+
+    AnchorPeers:
+      # AnchorPeers defines the location of peers which can be used
+      # for cross org gossip communication, or Service Discovery
+      - Host: peer0.org3.fabrictest.com
+        Port: 11051
+
 ################################################################################
 #
 #   SECTION: Capabilities
@@ -319,7 +346,7 @@ Profiles:
       Organizations:
         - *Org1
       Capabilities: *ApplicationCapabilities
-  ###### Another Profile #######################################################
+  ###### Profile to test if other orgs data and my orgs data are treated separately (2 orgs, 1 orderer) ###
   TwoOrgOneOrdGenesis:
     <<: *ChannelDefaults
     Orderer:
@@ -332,4 +359,19 @@ Profiles:
       Organizations:
         - *Org1
         - *Org2
+      Capabilities: *ApplicationCapabilities
+  ###### Profile to test if bidding works (3 orgs, 1 orderer) #############################################
+  ThreeOrgOneOrdGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        - *Org2
+        - *Org3
       Capabilities: *ApplicationCapabilities
