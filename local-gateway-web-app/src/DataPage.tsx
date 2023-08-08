@@ -19,6 +19,7 @@ import BidsMenu from "./BidsPage";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import BidForm from "./BidForm";
 
 export default function DataPage(props: {
   myOrgName: string | null;
@@ -29,6 +30,7 @@ export default function DataPage(props: {
   assetData: any;
 }) {
   const gridRef = React.useRef<any>();
+  const [bidFormOpen, setBidFormOpen] = React.useState(false);
 
   const theme = useTheme();
 
@@ -125,15 +127,22 @@ export default function DataPage(props: {
             <Tooltip
               title={`Bid for data: ${assetObject?.assetName} at the IPFS address: ${assetObject?.IPFS_CID}`}
             >
-              <Button
-                variant="contained"
-                style={{ textTransform: "none" }}
-                onClick={() =>
-                  bidForData(assetObject?.assetName, assetObject?.date, "100", "empty for now")
-                }
-              >
-                {"Bid for data, currently putting a arbitrary price"}
-              </Button>
+              {bidFormOpen ? (
+                <BidForm
+                  setBidFormOpenFunc={setBidFormOpen}
+                  bidForDataFunc={bidForData}
+                  deviceName={assetObject.assetName}
+                  date={assetObject.date}
+                />
+              ) : (
+                <Button
+                  variant="contained"
+                  style={{ textTransform: "none" }}
+                  onClick={() => setBidFormOpen(true)}
+                >
+                  {"Bid for data, currently putting a arbitrary price"}
+                </Button>
+              )}
             </Tooltip>
           )}
         </CardContent>
@@ -250,13 +259,14 @@ const bidForData = async (
     price: price,
     additionalCommitments: additionalCommitments,
   };
-  fetch(endpoint, {
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
   });
+  return res;
 };
 
 const nameUnitHeaderComponent = (props: any) => {

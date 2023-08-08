@@ -12,6 +12,7 @@ import {
   TypographyProps,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { error } from "console";
 import React from "react";
 import { ElementType } from "react";
 
@@ -44,7 +45,6 @@ const acceptBidAPICall = async (selectedBid: {
   date: string;
   price: string;
 }) => {
-  console.log(selectedBid);
   const endpoint = "http://localhost:7500/fabric/acceptBid";
   const body = {
     biddingOrg: selectedBid.biddingOrg,
@@ -52,13 +52,22 @@ const acceptBidAPICall = async (selectedBid: {
     date: selectedBid.date,
     price: selectedBid.price,
   };
-  fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    if (response.ok) {
+      return true; // Return true for successful response
+    } else {
+      return response.statusText;
+    }
+  } catch (err) {
+    return err;
+  }
 };
 
 export default function BidsMenu(props: { bidsForMyOrg: any }) {
@@ -174,8 +183,15 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
               <Button
                 variant="contained"
                 color="success"
-                onClick={() => {
-                  acceptBidAPICall(props.selectedBid);
+                onClick={async () => {
+                  const response = await acceptBidAPICall(props.selectedBid);
+                  if (response != true) {
+                    alert("Error ocurred during request:" + response);
+                  } else {
+                    alert("Success! Asset transferred");
+                    setModalOpen(false);
+                    window.location.reload();
+                  }
                 }}
               >
                 Accept Bid

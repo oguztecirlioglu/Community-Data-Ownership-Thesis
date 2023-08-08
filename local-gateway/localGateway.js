@@ -358,23 +358,6 @@ async function main() {
       }
     });
 
-    app.get("/fabric/getEvents", async (req, res) => {
-      try {
-        const network = gateway.getNetwork(CHANNEL_NAME);
-        const events = await network.getChaincodeEvents(CHAINCODE_NAME, { startBlock: BigInt(0) });
-        for await (const event of events) {
-          console.log(event);
-          // if prefix is "bidApproval_myMspid"
-          // you know that you have to process this, check if bidTransferCompleted in state
-          // if not, process it, then set transferCompleted in
-        }
-      } catch (error) {
-        console.error("Error iterating through events, error is:", error);
-      } finally {
-        events.close();
-      }
-    });
-
     app.listen(PORT, () => {
       console.log(`Local Gateway running on ${PORT}`);
     });

@@ -481,6 +481,8 @@ func (s *SmartContract) TransferEncKey(ctx contractapi.TransactionContextInterfa
 	if err != nil {
 		return fmt.Errorf("error putting private data into new owners implicit collection: %v", err)
 	}
+
+	// //Lines below were commented as we don't want to delete the private key for the old owner org.
 	// clientMspid, err := ctx.GetClientIdentity().GetMSPID()
 	// if err != nil {
 	// 	return fmt.Errorf("failed to get mspid of client that invoked this transaction")

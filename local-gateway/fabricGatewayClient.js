@@ -285,6 +285,25 @@ async function acceptBid(contract, biddingOrg, deviceName, date, price) {
   }
 }
 
+//ownerOrg string, buyingOrg, string, deviceName string, date string
+async function getDataBidDetails(contract, ownerOrg, buyingOrg, deviceName, date) {
+  try {
+    const resultBytes = await contract.submitTransaction(
+      "GetDataBidDetails",
+      ownerOrg,
+      buyingOrg,
+      deviceName,
+      date
+    );
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    console.log("*** Asset Received succesfully");
+    return result;
+  } catch (error) {
+    console.error(`***Error getting bid details error is:`, error);
+  }
+}
+
 const fabricGatewayClient = {
   gatewayAPI,
   getAllAssets,
@@ -295,6 +314,7 @@ const fabricGatewayClient = {
   getBidsForMyOrg,
   bidForData,
   acceptBid,
+  getDataBidDetails,
   uploadDataAsAsset,
   uploadKeyPrivateData,
   getKeyPrivateData,
