@@ -28,18 +28,21 @@ type KeyCIDAsset struct {
 	SymmetricKey string `json:"symmetricKey"`
 }
 
-type DataTransaction struct {
-	TransactionType string `json:"transactionType"`
-	IssuingOrg      string `json:"IssuingOrg"`
+type BidApproval struct {
+	Date             string `json:"date"`
+	DeviceName       string `json:"deviceName"`
+	NewOwnerOrg      string `json:"newOwnerOrg"`
+	OriginalOwnerOrg string `json:"originalOwnerOrg"`
 }
 
 type DataBid struct {
+	AdditionalCommitments string `json:"additionalCommitments"`
 	BiddingOrg            string `json:"biddingOrg"`
 	CurrentOwnerOrg       string `json:"currentOwnerOrg"`
 	DeviceName            string `json:"deviceName"`
 	Date                  string `json:"date"`
 	Price                 string `json:"price"`
-	AdditionalCommitments string `json:"additionalCommitments"`
+	Active                bool   `json:"active"`
 }
 
 func CreateAssetID(deviceName string, date string) (assetID string) {
@@ -84,13 +87,13 @@ func (s *SmartContract) GetAllAssets(ctx contractapi.TransactionContextInterface
 				return nil, err
 			}
 			assets = append(assets, &dataAsset)
-		} else if strings.HasPrefix(queryResponse.Key, "transaction") {
-			var transaction DataTransaction
-			err = json.Unmarshal(queryResponse.Value, &transaction)
+		} else if strings.HasPrefix(queryResponse.Key, "bid") {
+			var bid DataBid
+			err = json.Unmarshal(queryResponse.Value, &bid)
 			if err != nil {
 				return nil, err
 			}
-			assets = append(assets, &transaction)
+			assets = append(assets, &bid)
 		}
 
 	}
@@ -260,6 +263,7 @@ func (s *SmartContract) UploadKeyPrivateData(ctx contractapi.TransactionContextI
 	return ctx.GetStub().PutPrivateData(privateCollectionName, assetKey, jsonAsBytes)
 }
 
+// Expects assetKey to be in format of <deviceName>_<date>
 func (s *SmartContract) GetKeyPrivateData(ctx contractapi.TransactionContextInterface, assetKey string) (*KeyCIDAsset, error) {
 	assetKey = "data_" + assetKey
 
@@ -297,9 +301,9 @@ func (s *SmartContract) AssetExists(ctx contractapi.TransactionContextInterface,
 
 /*
 Model:
-IoT data prefix:  data_
-DataBid prefix:       bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BiddingOrg>
-Data Transfer:    dataTransfer_
+IoT data prefix:       data_<deviceName>_<date_
+DataBid prefix :       bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BiddingOrg>
+BidApproval    :       bidApproval_<newOwnerOrg>_<oldOwnerOrg>_<deviceName>_<date>
 */
 
 func (s *SmartContract) BidForData(ctx contractapi.TransactionContextInterface, deviceName string, date string, price string, additionalCommitments string) error {
@@ -321,6 +325,7 @@ func (s *SmartContract) BidForData(ctx contractapi.TransactionContextInterface, 
 		Date:                  date,
 		Price:                 price,
 		AdditionalCommitments: additionalCommitments,
+		Active:                true,
 	}
 
 	bidDataBytes, err := json.Marshal(bidData)
@@ -330,7 +335,7 @@ func (s *SmartContract) BidForData(ctx contractapi.TransactionContextInterface, 
 	return ctx.GetStub().PutState(bidID, bidDataBytes)
 }
 
-func (s *SmartContract) DeleteAllBidsForThisData(ctx contractapi.TransactionContextInterface, currentOwnerOrg string, deviceName string, date string) error {
+func (s *SmartContract) InactivateAllBidsForThisData(ctx contractapi.TransactionContextInterface, currentOwnerOrg string, deviceName string, date string) error {
 	startKey := "bid_" + deviceName + "_" + date + "_" + currentOwnerOrg
 	endKey := "bid_" + deviceName + "_" + date + "_" + currentOwnerOrg + "_~"
 
@@ -345,10 +350,23 @@ func (s *SmartContract) DeleteAllBidsForThisData(ctx contractapi.TransactionCont
 		if err != nil {
 			return err
 		}
+
+		var bid DataBid
 		key := queryResponse.Key
-		err = ctx.GetStub().DelState(key)
+		err = json.Unmarshal(queryResponse.Value, &bid)
 		if err != nil {
-			return fmt.Errorf("error deleting state for key: %v", key)
+			return fmt.Errorf("error unmarshalling query response into DataBid object: %v", err)
+		}
+
+		bid.Active = false
+		updatedBidBytes, err := json.Marshal(bid)
+		if err != nil {
+			return fmt.Errorf("error marshaling bid into new object: %v", err)
+		}
+
+		ctx.GetStub().PutState(key, updatedBidBytes)
+		if err != nil {
+			return fmt.Errorf("error updating state for key: %v", key)
 		}
 
 	}
@@ -382,35 +400,31 @@ func (s *SmartContract) GetBidsForMyOrg(ctx contractapi.TransactionContextInterf
 			return nil, err
 		}
 
-		if bid.CurrentOwnerOrg == mspid {
+		if bid.CurrentOwnerOrg == mspid && bid.Active == true {
 			bids = append(bids, &bid)
 		}
 	}
 	return bids, nil
 }
 
+// DataBid prefix: bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BiddingOrg>
 func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, biddingOrg string, deviceName string, date string, price string) error {
-	// DataBid prefix: bid_<deviceName>_<date>_<CurrentOwnerOrg>_<BiddingOrg>
-	// make sure the bid i want to accept exists
-	// identify new owner
-	// delete all bids
-	// update asset, change OwnerOrg field to new owner.
-	mspid, err := ctx.GetClientIdentity().GetMSPID()
+	clientMspid, err := ctx.GetClientIdentity().GetMSPID()
 	if err != nil {
 		return fmt.Errorf("error ocurred getting MSPID: %v", err)
 	}
-	bidID := "bid_" + deviceName + "_" + date + "_" + mspid + "_" + biddingOrg
+	bidID := "bid_" + deviceName + "_" + date + "_" + clientMspid + "_" + biddingOrg
 	bidBytes, err := ctx.GetStub().GetState(bidID)
 	if err != nil {
 		return fmt.Errorf("error ocurred getting bid to accept: %v", err)
 	}
+
 	var bidJSON DataBid
 	err = json.Unmarshal(bidBytes, &bidJSON)
-
-	if biddingOrg != bidJSON.BiddingOrg || mspid != bidJSON.CurrentOwnerOrg || price != bidJSON.Price {
+	if err != nil || biddingOrg != bidJSON.BiddingOrg || clientMspid != bidJSON.CurrentOwnerOrg || price != bidJSON.Price || !bidJSON.Active {
 		return fmt.Errorf("error ocurred processing bid. mismatch between provided bid details, and bid recorded on ledger")
 	}
-	s.DeleteAllBidsForThisData(ctx, mspid, deviceName, date)
+	s.InactivateAllBidsForThisData(ctx, clientMspid, deviceName, date)
 
 	assetID := CreateAssetID(deviceName, date)
 	asetBytes, err := ctx.GetStub().GetState(assetID)
@@ -428,11 +442,52 @@ func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, b
 	if err != nil {
 		return fmt.Errorf("failed to marhsal new Asset to JSON: %v", err)
 	}
-
 	err = ctx.GetStub().PutState(assetID, updatedAssetBytes)
 	if err != nil {
 		return fmt.Errorf("failed to put updated asset with new owner to the ledger: %v", err)
 	}
+
+	bidApprovalEvent := BidApproval{
+		Date: date, DeviceName: deviceName, NewOwnerOrg: biddingOrg, OriginalOwnerOrg: clientMspid,
+	}
+	bidApprovalEventJSON, err := json.Marshal(bidApprovalEvent)
+	if err != nil {
+		return fmt.Errorf("failed to marshal bidApprovalEvent to json: %v", err)
+	}
+
+	// bidApproval_<newOwnerOrg>_<oldOwnerOrg>_<deviceName>_<date>
+	bidApprovalId := "bidApproval_" + biddingOrg + "_" + clientMspid + "_" + deviceName + "_" + date
+	ctx.GetStub().SetEvent(bidApprovalId, bidApprovalEventJSON)
+
+	return nil
+}
+
+func (s *SmartContract) TransferEncKey(ctx contractapi.TransactionContextInterface, newOwnerOrg string, deviceName string, date string, symmetricKey string) error {
+	newOwnerCollectionName := "_implicit_org_" + newOwnerOrg
+	keyId := CreateAssetID(deviceName, date)
+	asset, err := s.GetAssetByID(ctx, deviceName+"_"+date)
+	if err != nil {
+		return fmt.Errorf("error getting asset by ID: %v", err)
+	}
+
+	keyData := KeyCIDAsset{
+		Date:         date,
+		DeviceName:   deviceName,
+		IPFS_CID:     asset.IPFS_CID,
+		SymmetricKey: symmetricKey,
+	}
+	jsonAsBytes, err := json.Marshal(keyData)
+	ctx.GetStub().PutPrivateData(newOwnerCollectionName, keyId, jsonAsBytes)
+	if err != nil {
+		return fmt.Errorf("error putting private data into new owners implicit collection: %v", err)
+	}
+	// clientMspid, err := ctx.GetClientIdentity().GetMSPID()
+	// if err != nil {
+	// 	return fmt.Errorf("failed to get mspid of client that invoked this transaction")
+	// }
+
+	// oldOwnerCollectionName := "_implicit_org_" + clientMspid
+	// ctx.GetStub().DelPrivateData(oldOwnerCollectionName, keyId)
 
 	return nil
 }

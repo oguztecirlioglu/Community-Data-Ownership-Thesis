@@ -330,17 +330,48 @@ async function main() {
       try {
         const network = gateway.getNetwork(CHANNEL_NAME);
         const contract = network.getContract(CHAINCODE_NAME);
-        const result = await fabricGatewayClient.acceptBid(
+        const clientOrg = await gateway.getIdentity()?.mspId;
+        let result = await fabricGatewayClient.acceptBid(
           contract,
           biddingOrg,
           deviceName,
           date,
           price
         );
-        res.status(200).send(result);
+        const privateKeyCIDAsset = await fabricGatewayClient.getKeyPrivateData(
+          contract,
+          deviceName + "_" + date
+        );
+        const symmetricKeyBase64 = privateKeyCIDAsset?.symmetricKey;
+        result = await fabricGatewayClient.transferEncKey(
+          contract,
+          clientOrg,
+          biddingOrg,
+          deviceName,
+          date,
+          symmetricKeyBase64
+        );
+        res.status(200).send("Bid accepted succesfully");
       } catch (error) {
         console.error("******** FAILED to accept bid:", error);
         res.status(500).send(`ERROR: ${error.message}`);
+      }
+    });
+
+    app.get("/fabric/getEvents", async (req, res) => {
+      try {
+        const network = gateway.getNetwork(CHANNEL_NAME);
+        const events = await network.getChaincodeEvents(CHAINCODE_NAME, { startBlock: BigInt(0) });
+        for await (const event of events) {
+          console.log(event);
+          // if prefix is "bidApproval_myMspid"
+          // you know that you have to process this, check if bidTransferCompleted in state
+          // if not, process it, then set transferCompleted in
+        }
+      } catch (error) {
+        console.error("Error iterating through events, error is:", error);
+      } finally {
+        events.close();
       }
     });
 

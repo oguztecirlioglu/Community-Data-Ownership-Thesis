@@ -94,7 +94,7 @@ export default function DataPage(props: {
             <Divider />
             <ListItem>
               <ListItemText
-                primary="Uploading Org"
+                primary="Owner Org"
                 secondary={assetObject?.ownerOrg}
                 secondaryTypographyProps={{
                   component: "div",

@@ -116,10 +116,9 @@ async function getAllDataAssets(contract) {
   const resultBytes = await contract.evaluateTransaction("GetAllDataAssets");
   const resultJson = utf8Decoder.decode(resultBytes);
 
-  // Check if the resultJson is empty (no data on the ledger)
   if (!resultJson) {
     console.log("*** No assets found on the ledger.");
-    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+    return { message: "No assets found on the ledger" };
   }
 
   const result = JSON.parse(resultJson);
@@ -134,10 +133,9 @@ async function getAllAssets(contract) {
   const resultBytes = await contract.evaluateTransaction("GetAllAssets");
   const resultJson = utf8Decoder.decode(resultBytes);
 
-  // Check if the resultJson is empty (no data on the ledger)
   if (!resultJson) {
     console.log("*** No assets found on the ledger.");
-    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+    return { message: "No assets found on the ledger" };
   }
 
   const result = JSON.parse(resultJson);
@@ -152,10 +150,9 @@ async function getMyOrgsDataAssets(contract) {
   const resultBytes = await contract.evaluateTransaction("GetMyOrgsDataAssets");
   const resultJson = utf8Decoder.decode(resultBytes);
 
-  // Check if the resultJson is empty (no data on the ledger)
   if (!resultJson) {
     console.log("*** No assets found on the ledger.");
-    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+    return { message: "No assets found on the ledger" };
   }
 
   const result = JSON.parse(resultJson);
@@ -170,10 +167,9 @@ async function getOtherOrgsDataAssets(contract) {
   const resultBytes = await contract.evaluateTransaction("GetOtherOrgsDataAssets");
   const resultJson = utf8Decoder.decode(resultBytes);
 
-  // Check if the resultJson is empty (no data on the ledger)
   if (!resultJson) {
     console.log("*** No assets found on the ledger.");
-    return { message: "No assets found on the ledger" }; // Return an empty array to indicate no data found
+    return { message: "No assets found on the ledger" };
   }
 
   const result = JSON.parse(resultJson);
@@ -181,7 +177,6 @@ async function getOtherOrgsDataAssets(contract) {
   return result;
 }
 
-// Need to think about encryption keys as well
 /**
  * Submits a blocking synchronous transaction
  * @param {*} deviceName
@@ -220,7 +215,6 @@ async function uploadKeyPrivateData(contract, deviceName, IPFS_CID, date, symmet
 // GetKeyPrivateData(ctx contractapi.TransactionContextInterface, assetId string)
 async function getKeyPrivateData(contract, assetId) {
   try {
-    // Need to do something with transient here.
     const resultBytes = await contract.evaluateTransaction("GetKeyPrivateData", assetId);
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
@@ -228,6 +222,21 @@ async function getKeyPrivateData(contract, assetId) {
     return result;
   } catch (error) {
     console.error("*** Error fetching Private Data from implicit data collection:", error);
+  }
+}
+
+//newOwnerOrg string, deviceName string, date string, symmetricKey string
+async function transferEncKey(contract, clientOrg, newOwnerOrg, deviceName, date, symmetricKey) {
+  const endorsingOrgs = [newOwnerOrg, clientOrg];
+  try {
+    await contract.submit("TransferEncKey", {
+      arguments: [newOwnerOrg, deviceName, date, symmetricKey],
+      transientData: {},
+      endorsingOrganizations: endorsingOrgs,
+    });
+    console.log("*** Data successfully transferred between private collections!");
+  } catch (error) {
+    console.error("*** Error transferring private data from implicit data collection:", error);
   }
 }
 
@@ -270,7 +279,6 @@ async function bidForData(contract, deviceName, date, price, additionalCommitmen
 
 async function acceptBid(contract, biddingOrg, deviceName, date, price) {
   try {
-    console.log(biddingOrg, deviceName, date, price);
     await contract.submitTransaction("AcceptBid", biddingOrg, deviceName, date, price);
   } catch (error) {
     console.error(`***Error accepting bid from ${biddingOrg}, error is:`, error);
@@ -290,6 +298,7 @@ const fabricGatewayClient = {
   uploadDataAsAsset,
   uploadKeyPrivateData,
   getKeyPrivateData,
+  transferEncKey,
 };
 
 module.exports = fabricGatewayClient;
