@@ -1,7 +1,7 @@
 const { rest } = require("msw");
 const { setupServer } = require("msw/node");
 const { sendData } = require("../virtualDevice");
-const { generateRandomData } = require("../utils");
+const { generateRandomData, envOrDefault } = require("../utils");
 
 const server = setupServer(
   // Define a request handler for your POST endpoint
@@ -51,5 +51,36 @@ describe("generateRandomData works", () => {
       expect(data).toHaveProperty(field);
     }
     expect(data.deviceName).toEqual("test_device_name");
+  });
+});
+
+describe("envOrDefault Function", () => {
+  it("returns the value from process.env when available", () => {
+    // Save original env files, will restore later
+    const mockEnv = { SOME_KEY: "mocked-value" };
+    const originalEnv = process.env;
+    process.env = { ...mockEnv };
+
+    // Test the function
+    const result = envOrDefault("SOME_KEY", "default-value");
+
+    // Restore original env files to not meddle with this or any other processes!
+    process.env = originalEnv;
+
+    expect(result).toBe("mocked-value");
+  });
+
+  it("returns the default value when process.env is not available", () => {
+    // Save original env files, will restore later
+    const originalEnv = process.env;
+    process.env = undefined;
+
+    // Test the function
+    const result = envOrDefault("SOME_KEY", "default-value");
+
+    // Restore original env files to not meddle with this or any other processes!
+    process.env = originalEnv;
+
+    expect(result).toBe("default-value");
   });
 });
