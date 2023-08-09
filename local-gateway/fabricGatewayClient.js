@@ -199,13 +199,11 @@ async function uploadDataAsAsset(contract, deviceName, cid, date) {
 async function uploadKeyPrivateData(contract, deviceName, IPFS_CID, date, symmetricKey) {
   try {
     // Need to do something with transient here.
-    await contract.submitTransaction(
-      "UploadKeyPrivateData",
-      deviceName,
-      IPFS_CID,
-      date,
-      symmetricKey
-    );
+    await contract.submit("UploadKeyPrivateData", {
+      arguments: [deviceName, IPFS_CID, date],
+      transientData: { symmetricKey: symmetricKey },
+    });
+
     console.log("*** Data uploaded to private implicit collection successfully!");
   } catch (error) {
     console.error("*** Error ocurred uploading Private Data to implicit data collection:", error);
@@ -230,8 +228,8 @@ async function transferEncKey(contract, clientOrg, newOwnerOrg, deviceName, date
   const endorsingOrgs = [newOwnerOrg, clientOrg];
   try {
     await contract.submit("TransferEncKey", {
-      arguments: [newOwnerOrg, deviceName, date, symmetricKey],
-      transientData: {},
+      arguments: [newOwnerOrg, deviceName, date],
+      transientData: { symmetricKey: symmetricKey },
       endorsingOrganizations: endorsingOrgs,
     });
     console.log("*** Data successfully transferred between private collections!");

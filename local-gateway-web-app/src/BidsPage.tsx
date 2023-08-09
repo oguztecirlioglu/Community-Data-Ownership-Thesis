@@ -120,6 +120,7 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
                   secondaryTypographyProps={bidSecondaryTypographyProps}
                 ></ListItemText>
               </ListItem>
+              <Divider />
               <ListItem>
                 <ListItemText
                   primary="Additional Commitments"
@@ -140,6 +141,7 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
                   Accept Bid?
                 </Button>
               </ListItem>
+              <Divider />
             </List>
           </CardContent>
         </Card>
@@ -176,9 +178,11 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Accepting Bid from: {props.selectedBid.biddingOrg}
             </Typography>
+            <Divider />
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               If you accept this bid, other bids for this data (from other orgs) will be deleted!
             </Typography>
+
             <Box p={3} textAlign="center">
               <Button
                 variant="contained"

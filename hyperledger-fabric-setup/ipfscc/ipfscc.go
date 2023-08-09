@@ -242,12 +242,19 @@ func (s *SmartContract) UploadDataAsAsset(ctx contractapi.TransactionContextInte
 	return ctx.GetStub().PutState(id, assetBytes)
 }
 
-func (s *SmartContract) UploadKeyPrivateData(ctx contractapi.TransactionContextInterface, deviceName string, IPFS_CID string, date string, symmetricKey string) error {
+func (s *SmartContract) UploadKeyPrivateData(ctx contractapi.TransactionContextInterface, deviceName string, IPFS_CID string, date string) error {
 	mspid, err := ctx.GetClientIdentity().GetMSPID()
 	if err != nil {
 		return fmt.Errorf("error ocurred getting MSPID: %v", err)
 	}
 	privateCollectionName := "_implicit_org_" + mspid
+
+	transientMap, err := ctx.GetStub().GetTransient()
+	if err != nil {
+		return fmt.Errorf("error getting transient: %v", err)
+	}
+	symmetricKeyBytes := transientMap["symmetricKey"]
+	symmetricKey := string(symmetricKeyBytes)
 
 	keyData := KeyCIDAsset{
 		Date:         date,
@@ -462,13 +469,20 @@ func (s *SmartContract) AcceptBid(ctx contractapi.TransactionContextInterface, b
 	return nil
 }
 
-func (s *SmartContract) TransferEncKey(ctx contractapi.TransactionContextInterface, newOwnerOrg string, deviceName string, date string, symmetricKey string) error {
+func (s *SmartContract) TransferEncKey(ctx contractapi.TransactionContextInterface, newOwnerOrg string, deviceName string, date string) error {
 	newOwnerCollectionName := "_implicit_org_" + newOwnerOrg
 	keyId := CreateAssetID(deviceName, date)
 	asset, err := s.GetAssetByID(ctx, deviceName+"_"+date)
 	if err != nil {
 		return fmt.Errorf("error getting asset by ID: %v", err)
 	}
+
+	transientMap, err := ctx.GetStub().GetTransient()
+	if err != nil {
+		return fmt.Errorf("error getting transient: %v", err)
+	}
+	symmetricKeyBytes := transientMap["symmetricKey"]
+	symmetricKey := string(symmetricKeyBytes)
 
 	keyData := KeyCIDAsset{
 		Date:         date,
