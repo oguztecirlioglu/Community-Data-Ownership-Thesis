@@ -1,6 +1,6 @@
 import { rest } from "msw";
 
-const mockData = {
+export const mockData = {
   device_name: "Virtual_IoT_Device_1070",
   date: "2023-07-31",
   data: [
@@ -151,7 +151,7 @@ const mockData = {
   ],
 };
 
-const mockAllAssets = [
+export const mockAllAssets = [
   {
     assetName: "Virtual_IoT_Device_1070",
     date: "2023-07-31",
@@ -208,6 +208,36 @@ const mockAllAssets = [
   },
 ];
 
+export const mockBid = [
+  {
+    additionalCommitments: "testCommitments",
+    biddingOrg: "Org1MSP",
+    currentOwnerOrg: "testOrg",
+    deviceName: "Virtual_IoT_Device_1337",
+    date: "2023-08-08",
+    price: "42",
+    active: true,
+  },
+];
+
+export const mockMyOrgsAssets = [
+  {
+    assetName: "Virtual_IoT_Device_7941",
+    date: "2023-08-08",
+    IPFS_CID: "QmTRW4y257tueE95yxwEaMML4fhvE6zbY3UqvvXqx6ETg4",
+    ownerOrg: "testOrg",
+  },
+];
+
+export const mockOtherOrgsAssets = [
+  {
+    assetName: "Virtual_IoT_Device_8709",
+    date: "2023-08-08",
+    IPFS_CID: "QmQ2EkvXGFHxCW9G8QFSX3bGzwp9DoTJmKjX6ACcQJdhuP",
+    ownerOrg: "Org1MSP",
+  },
+];
+
 export const handlers = [
   // Define the request handler for the API endpoint
   rest.get("http://localhost:7500/fabric/getAssetData/:id", (req, res, ctx) => {
@@ -223,4 +253,26 @@ export const handlers = [
     // Return the mock data as the response
     return res(ctx.json(mockAllAssets));
   }),
+  rest.get("http://localhost:7500/fabric/getAllDataAssets", (req, res, ctx) => {
+    // Return the mock data as the response
+    return res(ctx.json(mockAllAssets));
+  }),
+
+  rest.get("http://localhost:7500/fabric/getMyOrg", (req, res, ctx) => {
+    return res(ctx.json({ mspid: "testOrg" }));
+  }),
+
+  rest.get("http://localhost:7500/fabric/getBidsForMyOrg", (req, res, ctx) => {
+    return res(ctx.json(mockBid));
+  }),
+
+  rest.get("http://localhost:7500/fabric/getOtherOrgsDataAssets", (req, res, ctx) => {
+    return res(ctx.json(mockOtherOrgsAssets));
+  }),
+
+  rest.get("http://localhost:7500/fabric/getMyOrgsDataAssets", (req, res, ctx) => {
+    return res(ctx.json(mockMyOrgsAssets));
+  }),
+
+  // rest.get("http://localhost:7500/fabric/getAssetData/" + assetID, (req, res, ctx) => {}),
 ];

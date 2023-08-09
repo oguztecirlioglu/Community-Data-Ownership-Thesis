@@ -85,7 +85,43 @@ export default function AppCopy() {
     await fetchData(endpoint, setAssetData);
   };
 
-  const router = createBrowserRouter([
+  const router = createRouter(
+    myOrgName,
+    tableRows,
+    myOrgsAssets,
+    otherOrgsAssets,
+    assetData,
+    fetchAssetData,
+    bidsForMyOrg
+  );
+
+  return <RouterProvider router={router} />;
+}
+
+export const fetchData = async (endpoint: string, setter: Function) => {
+  try {
+    const getRequest = await fetch(endpoint);
+    if (!getRequest.ok) {
+      throw new Error("Unable to fetch data");
+    }
+    const jsonData = await getRequest.json();
+    setter(jsonData);
+    return jsonData;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createRouter = (
+  myOrgName: string | null,
+  tableRows: any,
+  myOrgsAssets: any,
+  otherOrgsAssets: any,
+  assetData: null | { data: any },
+  fetchAssetDataFunc: (endpoint: string, setter: Function) => Promise<any>,
+  bidsForMyOrg: any
+) => {
+  return createBrowserRouter([
     {
       path: "/",
       element: <AppRoot myOrgName={myOrgName} />,
@@ -100,7 +136,7 @@ export default function AppCopy() {
               myOrgAssets={myOrgsAssets}
               otherOrgsAssets={otherOrgsAssets}
               assetData={assetData}
-              fetchAssetData={fetchAssetData}
+              fetchAssetData={fetchAssetDataFunc}
             />
           ),
         },
@@ -111,17 +147,4 @@ export default function AppCopy() {
       ],
     },
   ]);
-
-  return <RouterProvider router={router} />;
-}
-
-const fetchData = async (endpoint: string, setter: Function) => {
-  try {
-    const getRequest = await fetch(endpoint);
-    if (!getRequest.ok) {
-      throw new Error("Unable to fetch data for all orgs.");
-    }
-    const jsonData = await getRequest.json();
-    setter(jsonData);
-  } catch (error) {}
 };
