@@ -380,3 +380,7 @@ function cleanUpServer(eventType) {
 });
 
 main();
+
+const localGatewayExports = { dataUploadLifecycle };
+
+module.exports = localGatewayExports;

@@ -22,7 +22,6 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
 
   const data = new FormData();
   data.append("json", cipherText);
-
   try {
     const response = await axios.post(`http://localhost:${ipfsClusterApiPort}/add`, data, {
       headers: {
@@ -31,7 +30,6 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
     });
     cid = response?.data?.cid || "error";
   } catch (error) {
-    console.error("Error sending image:", error.message);
     cid = "error";
     return { status: 1, cid: error.message, symmetricKey: null };
   }

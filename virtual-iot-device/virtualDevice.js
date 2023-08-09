@@ -40,8 +40,16 @@ async function sendData(API_ENDPOINT, API_PORT, data) {
   }
 }
 
+function printConfigVariables() {
+  console.log(`*** DEVICE NAME: ${DEVICE_NAME}`);
+  console.log(`*** API ENDPOINT: ${API_ENDPOINT}`);
+  console.log(`*** API PORT: ${API_PORT}`);
+}
+
 // NodeJS equivalent of creating a "main" method.
 if (require.main === module) {
+  printConfigVariables();
+
   setInterval(() => {
     const randomData = utils.generateRandomData(RANDOMNESS_AMOUNT, DEVICE_NAME);
     sendData(API_ENDPOINT, API_PORT, randomData);
