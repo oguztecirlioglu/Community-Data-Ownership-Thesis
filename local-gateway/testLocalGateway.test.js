@@ -36,7 +36,7 @@ const { uploadToIPFS } = require("./ipfsUtils");
 const { rest } = require("msw");
 const { setupServer } = require("msw/node");
 
-const IPFSCLUSTER_API_PORT = "9094";
+const IPFSCLUSTER_API_PORT = "7094";
 
 const server = setupServer(
   // For uploadToIPFS test

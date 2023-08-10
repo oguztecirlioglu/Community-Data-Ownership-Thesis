@@ -1,5 +1,4 @@
 #!/bin/bash
-
 function echoln() {
     echo -e "$1"
 }
@@ -22,17 +21,19 @@ if [ -z "$1" ]; then
 fi
 
 if [ "$1" = "up" ]; then
+    composeFileName="threeClusters.yaml"
+
     echoln "\n\nBringing network up!"
 
     echoln "\nLaunching fabric network."
     pushd hyperledger-fabric-setup
-    ./runOneOrgOneOrdNetwork.sh >/dev/null 2>&1 &
+    ./runThreeOrgOneOrdNetwork.sh >/dev/null 2>&1 &
     pid1=$!
     popd
 
     echoln "\nLaunching IPFS network."
     pushd ipfs
-    docker compose -f docker-compose.yaml up -d >/dev/null 2>&1 &
+    docker compose -f $composeFileName up -d >/dev/null 2>&1 &
     pid2=$!
     popd
 
@@ -59,7 +60,7 @@ if [ "$1" = "up" ]; then
     echoln "\nNow bringing up the gateway server and gateway web app."
 
     pushd local-gateway
-    node localGateway.js >/dev/null 2>&1 &
+    npm run start:org1 >/dev/null 2>&1 &
     pidGateway=$!
     popd
 
@@ -68,7 +69,7 @@ if [ "$1" = "up" ]; then
     pidWebapp=$!
     popd
 
-    sleep 5
+    sleep 1
 
     if ! ps -p $pidGateway >/dev/null || ! ps -p $pidWebapp >/dev/null; then
         failln "\nError: looks like gateway or gateway web app crashed. Exiting."
@@ -85,12 +86,12 @@ if [ "$1" = "down" ]; then
     echoln "\n\nBringing network down!\n\n"
 
     pushd hyperledger-fabric-setup
-    (./runOneOrgOneOrdNetwork.sh down)
+    (./runThreeOrgOneOrdNetwork.sh down)
     pid1=$!
     popd
 
     pushd ipfs
-    (docker compose -f docker-compose.yaml down)
+    (docker compose -f $composeFileName down)
     pid2=$!
     popd
 
@@ -120,6 +121,6 @@ if [ "$1" = "down" ]; then
     kill $pidGateway
     kill $pidWebapp
 
-    succesln "\n\nNetwork brough down successfully\n\n"
+    succesln "\n\nNetwork brought down successfully\n\n"
     exit 0
 fi

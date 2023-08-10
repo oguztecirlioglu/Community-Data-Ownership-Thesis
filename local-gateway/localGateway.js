@@ -15,9 +15,8 @@ app.use(cors());
 const UPDATE_POLL_FREQUENCY = utils.envOrDefault("LOCAL_GATEWAY_UPDATE_POLL_FREQUENCY", 10);
 const PORT = utils.envOrDefault("LOCAL_GATEWAY_PORT", 7500);
 const JSON_PATH = utils.envOrDefault("LOCAL_GATEWAY_JSON_PATH", "./localStorage.json");
-const IPFS_API_PORT = utils.envOrDefault("IPFS_API_PORT", 5001);
 const IPFS_HTTP_GATEWAY_PORT = utils.envOrDefault("IPFS_HTTP_GATEWAY_PORT", 8080);
-const IPFSCLUSTER_API_PORT = utils.envOrDefault("IPFSCLUSTER_API_PORT", 9094);
+const IPFSCLUSTER_API_PORT = utils.envOrDefault("IPFSCLUSTER_API_PORT", 7094);
 const CHANNEL_NAME = utils.envOrDefault("FABRIC_CHANNEL_NAME", "mychannel");
 const CHAINCODE_NAME = utils.envOrDefault("FABRIC_CHAINCODE_NAME", "ipfscc");
 const FABRIC_GATEWAY_PORT = utils.envOrDefault("FABRIC_GATEWAY_PORT", 7051);
@@ -193,7 +192,9 @@ async function main() {
         ]);
 
         const dataCid = asset?.IPFS_CID;
-        const response = await axios.get(`http://localhost:8080/ipfs/${dataCid}`);
+        const response = await axios.get(
+          `http://localhost:${IPFS_HTTP_GATEWAY_PORT}/ipfs/${dataCid}`
+        );
         const ciphertext = response.data;
         const symmetricKeyBase64 = privateKeyCIDAsset?.symmetricKey;
 

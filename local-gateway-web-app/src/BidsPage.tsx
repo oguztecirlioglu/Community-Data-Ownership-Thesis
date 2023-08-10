@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Divider,
   List,
   ListItem,
@@ -72,6 +73,7 @@ const acceptBidAPICall = async (selectedBid: {
 
 export default function BidsMenu(props: { bidsForMyOrg: any }) {
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [selectedBid, setSelectedBid] = React.useState({ biddingOrg: "ERROR: NONE SELECTED" });
   const theme = useTheme();
 
@@ -184,22 +186,33 @@ export default function BidsMenu(props: { bidsForMyOrg: any }) {
             </Typography>
 
             <Box p={3} textAlign="center">
-              <Button
-                variant="contained"
-                color="success"
-                onClick={async () => {
-                  const response = await acceptBidAPICall(props.selectedBid);
-                  if (response != true) {
-                    alert("Error ocurred during request:" + response);
-                  } else {
-                    alert("Success! Asset transferred");
-                    setModalOpen(false);
-                    window.location.reload();
-                  }
-                }}
-              >
-                Accept Bid
-              </Button>
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      const response = await acceptBidAPICall(props.selectedBid);
+                      if (response != true) {
+                        alert("Error ocurred during request:" + response);
+                      } else {
+                        alert("Success! Asset transferred");
+                        setModalOpen(false);
+                        window.location.reload();
+                      }
+                    } catch (err) {
+                      console.error(err);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                >
+                  Accept Bid
+                </Button>
+              )}
             </Box>
           </Box>
         </Modal>
