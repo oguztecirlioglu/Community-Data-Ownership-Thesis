@@ -1,9 +1,8 @@
-package Main_test
+package main
 
 import (
 	"encoding/base64"
 	"encoding/json"
-	Main "ipfscc"
 	"ipfscc/mocks"
 	"os"
 	"testing"
@@ -50,7 +49,7 @@ const testEncryptionKey = "a1234"
 
 func TestCreateAssetID(t *testing.T) {
 	// Use require here because if this function doesn't work, everything is bound to be false, and we use it in the tests for some assertions too!
-	assetId := Main.CreateAssetID(testDeviceName, testDataDate)
+	assetId := CreateAssetID(testDeviceName, testDataDate)
 
 	expectedAssetId := "data_" + testDeviceName + "_" + testDataDate
 
@@ -59,7 +58,7 @@ func TestCreateAssetID(t *testing.T) {
 
 func TestUploadDataAsAsset(t *testing.T) {
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
-	assetTransferCC := Main.SmartContract{}
+	assetTransferCC := SmartContract{}
 
 	// No transient map
 	err := assetTransferCC.UploadDataAsAsset(transactionContext, testDeviceName, testCID, testDataDate)
@@ -73,7 +72,7 @@ func TestUploadDataAsAsset(t *testing.T) {
 
 func TestUploadKeyPrivate(t *testing.T) {
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
-	assetTransferCC := Main.SmartContract{}
+	assetTransferCC := SmartContract{}
 
 	symmetricKeyBytes := []byte(testEncryptionKey)
 	assetPropMap := map[string][]byte{
@@ -90,7 +89,7 @@ func TestUploadKeyPrivate(t *testing.T) {
 	getTransientCallCount := chaincodeStub.GetTransientCallCount()
 	assert.Equal(t, 1, getTransientCallCount)
 
-	expectedKeyData := Main.KeyCIDAsset{
+	expectedKeyData := KeyCIDAsset{
 		Date:         testDataDate,
 		DeviceName:   testDeviceName,
 		IPFS_CID:     testCID,
@@ -99,7 +98,7 @@ func TestUploadKeyPrivate(t *testing.T) {
 
 	expectedPrivateDataBytes, _ := json.Marshal(expectedKeyData)
 	expectedCollectionName := "_implicit_org_" + myOrg1Msp
-	expectedAssetKey := Main.CreateAssetID(testDeviceName, testDataDate)
+	expectedAssetKey := CreateAssetID(testDeviceName, testDataDate)
 	collectionName, assetKey, privateDataBytes := chaincodeStub.PutPrivateDataArgsForCall(0)
 
 	assert.Equal(t, expectedCollectionName, collectionName)
@@ -110,9 +109,9 @@ func TestUploadKeyPrivate(t *testing.T) {
 func TestGetMyOrgsDataAssets(t *testing.T) {
 	// Test if it returns nothing, since data isn't owned by my org
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
-	assetTransferCC := Main.SmartContract{}
+	assetTransferCC := SmartContract{}
 
-	asset := Main.DataAsset{
+	asset := DataAsset{
 		AssetName: testDeviceName,
 		Date:      testDataDate,
 		IPFS_CID:  testCID,
@@ -134,10 +133,10 @@ func TestGetMyOrgsDataAssets(t *testing.T) {
 	assert.Equal(t, getStateByRangeCallCount, 1)
 
 	assert.Equal(t, len(assets), 0)
-	assert.IsType(t, []*Main.DataAsset{}, assets)
+	assert.IsType(t, []*DataAsset{}, assets)
 
 	// Test if it returns the assets now, since the owner org is my org.
-	asset = Main.DataAsset{
+	asset = DataAsset{
 		AssetName: testDeviceName,
 		Date:      testDataDate,
 		IPFS_CID:  testCID,
@@ -159,15 +158,15 @@ func TestGetMyOrgsDataAssets(t *testing.T) {
 	assert.Equal(t, getStateByRangeCallCount, 2)
 
 	assert.Equal(t, len(assets), 1)
-	assert.IsType(t, []*Main.DataAsset{}, assets)
+	assert.IsType(t, []*DataAsset{}, assets)
 }
 
 func TestGetOtherOrgsDataAssets(t *testing.T) {
 	// Test if it returns the assets, because none of it is owned by my org
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
-	assetTransferCC := Main.SmartContract{}
+	assetTransferCC := SmartContract{}
 
-	asset := Main.DataAsset{
+	asset := DataAsset{
 		AssetName: testDeviceName,
 		Date:      testDataDate,
 		IPFS_CID:  testCID,
@@ -189,10 +188,10 @@ func TestGetOtherOrgsDataAssets(t *testing.T) {
 	assert.Equal(t, getStateByRangeCallCount, 1)
 
 	assert.Equal(t, len(assets), 1)
-	assert.IsType(t, []*Main.DataAsset{}, assets)
+	assert.IsType(t, []*DataAsset{}, assets)
 
 	// Now test if it returns empty, because all assets belong to my org
-	asset = Main.DataAsset{
+	asset = DataAsset{
 		AssetName: testDeviceName,
 		Date:      testDataDate,
 		IPFS_CID:  testCID,
@@ -214,18 +213,18 @@ func TestGetOtherOrgsDataAssets(t *testing.T) {
 	assert.Equal(t, getStateByRangeCallCount, 2)
 
 	assert.Equal(t, len(assets), 0)
-	assert.IsType(t, []*Main.DataAsset{}, assets)
+	assert.IsType(t, []*DataAsset{}, assets)
 }
 
 func TestAcceptBid(t *testing.T) {
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
-	assetTransferCC := Main.SmartContract{}
+	assetTransferCC := SmartContract{}
 
 	const testBidPrice = "1001"
 	const biddingOrg = "biddingOrg"
 
 	// expectedbidID := "bid_" + testDeviceName + "_" + testDataDate + "_" + myOrg1Msp + "_" + biddingOrg
-	expectedBid := Main.DataBid{
+	expectedBid := DataBid{
 		AdditionalCommitments: "",
 		BiddingOrg:            biddingOrg,
 		CurrentOwnerOrg:       myOrg1Msp,
