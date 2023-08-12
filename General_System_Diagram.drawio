@@ -1,9 +1,18 @@
-<mxfile host="app.diagrams.net" modified="2023-08-12T17:40:36.883Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="zWHomGUpYn6PhKRm9Mkv" version="21.6.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-08-12T18:21:47.608Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="5ARCGFF3q94-Xnb2Z-_5" version="21.6.8" type="github">
   <diagram name="Page-1" id="aklOrfjd24qqs5W9E0Lq">
-    <mxGraphModel dx="3434" dy="1451" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3033" dy="1228" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-39" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#333333;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="-522.47" y="406.89" width="954.97" height="805" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-55" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="-454" y="710.11" width="343" height="198.78" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-53" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="-13" y="710" width="265" height="198.78" as="geometry" />
+        </mxCell>
         <mxCell id="0mtXq6aFVz5rFMkoWRVZ-219" value="" style="group;fontColor=none;noLabel=1;labelBackgroundColor=none;" parent="1" vertex="1" connectable="0">
           <mxGeometry x="656.78" y="1561.42" width="1254" height="1110" as="geometry" />
         </mxCell>
@@ -215,55 +224,82 @@
         <mxCell id="KafZrZifVaAwVdbze_bC-66" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Hyperledger Fabric network is created, and each gateway is its own organisation.&lt;br&gt;Each chunk of IoT/WoT data uploaded by the Gateway to the IPFS Cluster is encrypted.&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;Cluster returns a CID&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;This CID is owned by the Gateway (which is an organisation) on the Hyperledger Network as an Asset.&lt;/b&gt;&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;fontFamily=Helvetica;fontColor=default;" parent="1" vertex="1">
           <mxGeometry x="1950" y="1770" width="900" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-1" value="" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/wireless/Laptop_Wireless.svg;verticalAlign=bottom;labelPosition=center;verticalLabelPosition=top;labelBorderColor=default;spacingLeft=2;spacingBottom=2;spacingRight=2;fontSize=15;fontStyle=1;container=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontFamily=Helvetica;fontColor=default;" vertex="1" parent="1">
-          <mxGeometry x="-230.46538461538464" y="452" width="300.88615384615383" height="247.5969230769231" as="geometry" />
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-1" value="&lt;font style=&quot;font-size: 21px;&quot;&gt;Components of Each Node&lt;/font&gt;" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/wireless/Laptop_Wireless.svg;verticalAlign=bottom;labelPosition=center;verticalLabelPosition=top;labelBorderColor=none;spacingLeft=2;spacingBottom=2;spacingRight=2;fontSize=21;fontStyle=1;container=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontFamily=Helvetica;fontColor=#FFFFFF;labelBackgroundColor=none;" vertex="1" parent="1">
+          <mxGeometry x="-195.42538461538464" y="458" width="300.88615384615383" height="247.5969230769231" as="geometry" />
         </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-13" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="-204" y="894.9965217391305" width="241.46" height="102.82608695652175" as="geometry" />
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-38" value="" style="group;labelBorderColor=default;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-434" y="737" width="303.01" height="177" as="geometry" />
         </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" edge="1" parent="Jdr6OTimrpVTwfTXbPgM-13" source="Jdr6OTimrpVTwfTXbPgM-11" target="Jdr6OTimrpVTwfTXbPgM-16">
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-33" value="" style="group" vertex="1" connectable="0" parent="Jdr6OTimrpVTwfTXbPgM-38">
+          <mxGeometry width="303.01" height="158.79999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-7" value="Other IoT/WoT Sensor" style="swimlane;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontSize=14;container=0;fontFamily=Helvetica;fontColor=default;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-33">
+          <mxGeometry x="153.81" width="149.2" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-8" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_vibration_sensor;container=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-7">
+          <mxGeometry x="43.33427426841744" y="41.99550765704917" width="55.673334480283145" height="55.673334480283145" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-4" value="AQM Sensor" style="swimlane;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontSize=14;container=0;fontFamily=Helvetica;fontColor=default;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-33">
+          <mxGeometry width="109.54497629167501" height="121.51764349027673" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-5" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_humidity_sensor;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-4">
+          <mxGeometry x="10.531064163116955" y="46.80755282936196" width="42.13268318910578" height="42.13268318910578" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-6" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_temperature_vibration_sensor;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-4">
+          <mxGeometry x="56.87701567113326" y="46.80755282936196" width="42.13268318910578" height="42.13268318910578" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-37" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#ffffff&quot;&gt;&lt;b&gt;Various Sensors in the &lt;br&gt;Homeowners Network&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-38">
+          <mxGeometry x="43.16504854368932" y="129" width="169" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-47" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="139" y="920" width="228" height="200.77999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-46" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A1A1A;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-47">
+          <mxGeometry width="228" height="200.78" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-43" value="&lt;b&gt;Local Gateway Web Application&lt;/b&gt;" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=none;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/browser-128.png;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-47">
+          <mxGeometry x="50" y="11.459999999999923" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-48" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-159.48" y="919.72" width="265" height="198.77999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-45" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A1A1A;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-48">
+          <mxGeometry width="265" height="198.78" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-29" value="&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Local Gateway Server&lt;/b&gt;&lt;br style=&quot;font-size: 14px;&quot;&gt;(coordinates IPFS &amp;amp; &lt;br&gt;Hyperledger Fabric)&lt;/font&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#E6E6E6;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.active_directory_federation_services_server;fontSize=14;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-48">
+          <mxGeometry x="87.47999999999999" y="19.24000000000001" width="90.04" height="101" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-49" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-461" y="920.22" width="280" height="197.77999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-44" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A1A1A;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-49">
+          <mxGeometry width="280" height="197.78" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-15" value="&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Hyperledger Fabric &lt;br&gt;Peer&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#FFFFFF;labelBackgroundColor=none;fontSize=12;spacingTop=3;image=img/lib/ibm/blockchain/hyperledger_fabric.svg;container=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-49">
+          <mxGeometry x="23.003076923076833" y="36.31652173913051" width="96.92307692307693" height="96.92307692307693" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-20" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;[OPTIONAL] &lt;br&gt;Hyperledger Fabric &lt;br&gt;Orderer&lt;/font&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#FFFFFF;labelBackgroundColor=none;fontSize=12;spacingTop=3;image=img/lib/ibm/blockchain/ledger.svg;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-49">
+          <mxGeometry x="182" y="54.780000000000086" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-36" value="" style="group;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
+          <mxGeometry y="744.9965217391305" width="258" height="163.78347826086954" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-13" value="" style="group" vertex="1" connectable="0" parent="Jdr6OTimrpVTwfTXbPgM-36">
+          <mxGeometry width="258" height="163.78347826086954" as="geometry" />
+        </mxCell>
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;strokeColor=#FFFFFF;" edge="1" parent="Jdr6OTimrpVTwfTXbPgM-13" source="Jdr6OTimrpVTwfTXbPgM-11" target="Jdr6OTimrpVTwfTXbPgM-16">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="166.0015384615385" y="51.37847826086954" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-11" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;IPFS Cluster&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#1A1A1A;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.rds_multi_az_db_cluster;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-13">
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;IPFS Cluster&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#FFFFFF;gradientColor=none;fillColor=#FFFFFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.rds_multi_az_db_cluster;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-13">
           <mxGeometry y="12.413478260869624" width="78" height="78" as="geometry" />
         </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-16" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;IPFS Kubo&lt;/font&gt;" style="sketch=0;outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.file_cache_s3_linked_datasets;fillColor=#1A1A1A;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-13">
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-16" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;IPFS Kubo&lt;/font&gt;" style="sketch=0;outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.file_cache_s3_linked_datasets;fillColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-13">
           <mxGeometry x="159.46" y="12.413478260869542" width="78" height="78" as="geometry" />
         </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-15" value="&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#000000&quot;&gt;Hyperledger Fabric &lt;br&gt;Peer&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/blockchain/hyperledger_fabric.svg;container=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="-201.26692307692318" y="1028.2965217391304" width="96.92307692307693" height="96.92307692307693" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-20" value="&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#000000&quot;&gt;[OPTIONAL] &lt;br&gt;Hyperledger Fabric &lt;br&gt;Orderer&lt;/font&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/blockchain/ledger.svg;" vertex="1" parent="1">
-          <mxGeometry x="-25.270000000000003" y="1046.76" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-26" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Local Gateway Web Application&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/preview/Static_Apps.svg;" vertex="1" parent="1">
-          <mxGeometry x="-115.02000000000001" y="1393" width="70" height="56.00000000000001" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-29" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Local Gateway Server&lt;br&gt;(coordinates IPFS &amp;amp; Hyperledger Fabric)&lt;/font&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.active_directory_federation_services_server;" vertex="1" parent="1">
-          <mxGeometry x="-120.06" y="1193" width="90.04" height="101" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-33" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="-245.9784615384614" y="737.9956521739131" width="331.91846153846143" height="129.00434782608693" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-4" value="AQM Sensor" style="swimlane;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontSize=14;container=0;fontFamily=Helvetica;fontColor=default;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-33">
-          <mxGeometry width="120" height="121.52173913043478" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-5" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_humidity_sensor;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-4">
-          <mxGeometry x="11.536153846153809" y="46.80913043478256" width="46.15384615384615" height="46.15384615384615" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-6" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_temperature_vibration_sensor;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-4">
-          <mxGeometry x="62.305384615384526" y="46.80913043478256" width="46.15384615384615" height="46.15384615384615" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-9" value="" style="group" vertex="1" connectable="0" parent="Jdr6OTimrpVTwfTXbPgM-33">
-          <mxGeometry x="175.9984615384614" y="2.004347826086928" width="155.92" height="127" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-7" value="Other IoT/WoT Sensor" style="swimlane;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontSize=14;container=0;fontFamily=Helvetica;fontColor=default;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-9">
-          <mxGeometry width="155.92" height="119" as="geometry" />
-        </mxCell>
-        <mxCell id="Jdr6OTimrpVTwfTXbPgM-8" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_vibration_sensor;container=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fontFamily=Helvetica;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-7">
-          <mxGeometry x="47.47011764705893" y="41.996923076923004" width="60.98682352941176" height="60.98682352941176" as="geometry" />
+        <mxCell id="Jdr6OTimrpVTwfTXbPgM-35" value="&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px;&quot;&gt;IPFS Cluster Deployment&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=14;" vertex="1" parent="Jdr6OTimrpVTwfTXbPgM-36">
+          <mxGeometry x="28.22999999999999" y="119.00347826086954" width="185" height="29" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
