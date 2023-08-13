@@ -126,22 +126,6 @@ async function getAllDataAssets(contract) {
   return result;
 }
 
-async function getAllAssets(contract) {
-  console.log(
-    "\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger"
-  );
-  const resultBytes = await contract.evaluateTransaction("GetAllAssets");
-  const resultJson = utf8Decoder.decode(resultBytes);
-
-  if (!resultJson) {
-    console.log("*** No assets found on the ledger.");
-    return { message: "No assets found on the ledger" };
-  }
-
-  const result = JSON.parse(resultJson);
-  console.log("*** Result:", result);
-  return result;
-}
 
 async function getMyOrgsDataAssets(contract) {
   console.log(
@@ -304,7 +288,6 @@ async function getDataBidDetails(contract, ownerOrg, buyingOrg, deviceName, date
 
 const fabricGatewayClient = {
   gatewayAPI,
-  getAllAssets,
   getAllDataAssets,
   getMyOrgsDataAssets,
   getOtherOrgsDataAssets,

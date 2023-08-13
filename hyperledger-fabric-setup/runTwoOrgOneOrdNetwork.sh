@@ -46,7 +46,7 @@ function setGeneralVars() {
   export PEER0_ORG1_CA=${PWD}/organizations/peerOrganizations/org1.fabrictest.com/tlsca/tlsca.org1.fabrictest.com-cert.pem
   export PEER0_ORG2_CA=${PWD}/organizations/peerOrganizations/org2.fabrictest.com/tlsca/tlsca.org2.fabrictest.com-cert.pem
 
-  export CHANNEL_NAME=mychannel
+  export CHANNEL_NAME=communitydatachannel
 
   export CC_SRC_PATH="ipfscc"
   export CC_NAME="ipfscc"
@@ -160,7 +160,7 @@ BLOCKFILE=channel-artifacts/$CHANNEL_NAME.block
 export FABRIC_CFG_PATH=${PWD}/configFiles
 
 echoln "Creating genesis block from configtx.yaml"
-configtxgen -profile TwoOrgOneOrdGenesis -outputBlock ./channel-artifacts/mychannel.block -channelID mychannel -configPath ./configFiles
+configtxgen -profile TwoOrgOneOrdGenesis -outputBlock ./channel-artifacts/communitydatachannel.block -channelID communitydatachannel -configPath ./configFiles
 checkAndThrowError $? "Create genesis block failed"
 
 echoln "Create channel"

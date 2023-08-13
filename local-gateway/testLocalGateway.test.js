@@ -17,7 +17,6 @@ const {
 
 const {
   gatewayAPI,
-  getAllAssets,
   getAllDataAssets,
   getMyOrgsDataAssets,
   getOtherOrgsDataAssets,

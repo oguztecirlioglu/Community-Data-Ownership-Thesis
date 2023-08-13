@@ -17,7 +17,7 @@ const PORT = utils.envOrDefault("LOCAL_GATEWAY_PORT", 7500);
 const JSON_PATH = utils.envOrDefault("LOCAL_GATEWAY_JSON_PATH", "./localStorage.json");
 const IPFS_HTTP_GATEWAY_PORT = utils.envOrDefault("IPFS_HTTP_GATEWAY_PORT", 8080);
 const IPFSCLUSTER_API_PORT = utils.envOrDefault("IPFSCLUSTER_API_PORT", 7094);
-const CHANNEL_NAME = utils.envOrDefault("FABRIC_CHANNEL_NAME", "mychannel");
+const CHANNEL_NAME = utils.envOrDefault("FABRIC_CHANNEL_NAME", "communitydatachannel");
 const CHAINCODE_NAME = utils.envOrDefault("FABRIC_CHAINCODE_NAME", "ipfscc");
 const FABRIC_GATEWAY_PORT = utils.envOrDefault("FABRIC_GATEWAY_PORT", 7051);
 const FABRIC_PEER_ALIAS = utils.envOrDefault("FABRIC_PEER_ALIAS", "peer0.org1.fabrictest.com");
@@ -259,18 +259,6 @@ async function main() {
         const network = gateway.getNetwork(CHANNEL_NAME);
         const contract = network.getContract(CHAINCODE_NAME);
         const result = await fabricGatewayClient.getAllDataAssets(contract);
-        res.status(200).send(result);
-      } catch (error) {
-        console.error("******** FAILED to get all assets:", error);
-        res.status(500).send(`ERROR: ${error.message}`);
-      }
-    });
-
-    app.get("/fabric/getAllAssets", async (req, res) => {
-      try {
-        const network = gateway.getNetwork(CHANNEL_NAME);
-        const contract = network.getContract(CHAINCODE_NAME);
-        const result = await fabricGatewayClient.getAllAssets(contract);
         res.status(200).send(result);
       } catch (error) {
         console.error("******** FAILED to get all assets:", error);

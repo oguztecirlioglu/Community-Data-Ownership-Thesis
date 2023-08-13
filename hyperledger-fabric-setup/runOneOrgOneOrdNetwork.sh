@@ -30,7 +30,7 @@ function setGeneralVars() {
   export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/server.crt
   export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/organizations/ordererOrganizations/fabrictest.com/orderers/orderer.fabrictest.com/tls/server.key
 
-  export CHANNEL_NAME=mychannel
+  export CHANNEL_NAME=communitydatachannel
   # export DOCKER_SOCK=/var/run/docker.sock
 
   export CC_SRC_PATH="ipfscc"
@@ -145,7 +145,7 @@ BLOCKFILE=channel-artifacts/$CHANNEL_NAME.block
 export FABRIC_CFG_PATH=${PWD}/configFiles
 
 echoln "Creating genesis block from configtx.yaml"
-configtxgen -profile OneOrgOneOrdGenesis -outputBlock ./channel-artifacts/mychannel.block -channelID mychannel -configPath ./configFiles
+configtxgen -profile OneOrgOneOrdGenesis -outputBlock ./channel-artifacts/communitydatachannel.block -channelID communitydatachannel -configPath ./configFiles
 checkAndThrowError $? "Create genesis block failed"
 
 echoln "Create channel"

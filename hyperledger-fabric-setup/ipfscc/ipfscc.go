@@ -65,40 +65,6 @@ func (s *SmartContract) GetAssetOwner(ctx contractapi.TransactionContextInterfac
 	return assetJSON.OwnerOrg, nil
 }
 
-func (s *SmartContract) GetAllAssets(ctx contractapi.TransactionContextInterface) ([]interface{}, error) {
-	resultsIterator, err := ctx.GetStub().GetStateByRange("", "")
-
-	if err != nil {
-		return nil, err
-	}
-	defer resultsIterator.Close()
-
-	var assets []interface{}
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return nil, err
-		}
-
-		if strings.HasPrefix(queryResponse.Key, "data") {
-			var dataAsset DataAsset
-			err = json.Unmarshal(queryResponse.Value, &dataAsset)
-			if err != nil {
-				return nil, err
-			}
-			assets = append(assets, &dataAsset)
-		} else if strings.HasPrefix(queryResponse.Key, "bid") {
-			var bid DataBid
-			err = json.Unmarshal(queryResponse.Value, &bid)
-			if err != nil {
-				return nil, err
-			}
-			assets = append(assets, &bid)
-		}
-
-	}
-	return assets, nil
-}
 
 // GetAssetByID, assetID is: <assetName>_<date>,
 func (s *SmartContract) GetAssetByID(ctx contractapi.TransactionContextInterface, assetId string) (*DataAsset, error) {
