@@ -18,3 +18,5 @@ hyperledger-fabric-setup/channel-artifacts
 local-gateway/coverage
 local-gateway-web-app/coverage
 virtual-iot-device/coverage
+
+

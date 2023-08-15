@@ -4,8 +4,8 @@
   "description": "A virtual IoT device that will generate random data and push it to an HTTP endpoint",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest",
     "coverage": "npx jest --coverage",
+    "test": "npx jest",
     "generateDocs": "./node_modules/.bin/jsdoc *.js",
     "start": "node virtualDevice.js",
     "start:sendOldData": "export VIRTUAL_DEVICE_INTERVAL_SECONDS=0.2 && export VIRTUAL_DEVICE_SEND_OLD_DATA=true && node virtualDevice.js & vdPid=$! && sleep 1 && kill $vdPid"

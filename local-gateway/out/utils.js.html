@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>require("./jsDocTypes");
+const fs = require("fs");
+const path = require("node:path");
+
+/**
+ * Processes the JSON object recieved in exposed POST endpoint.
+ * Adds readings to the existing records for that device, or if they don't exist creates a new entry and pushes the devices measurements.
+ * @param {Object} data The new IoT data that just got pushed to the local gateway server.
+ * @param {Aggregated_IoT_Data} dailyStorage JavaScript Object that is used to aggregate daily data of the various IoT devices on the local network.
+ * @returns {Object} Object with status_code, and message, indicating the status of the processing, a message if an error occurred.
+ */
+function processDataInput(data, dailyStorage) {
+  // Gets name of iot device from field in data
+  // strip name field from the data json as it is superflous and will use up extra storage
+  // check if this device has data for the day, if so, append the new data to the array
+  // if not, create new key value pair where key is name of the iot device, and the value will be an array of size 1 with the data.
+  // return an object with the status_code (0 for success, != 0 for fail), message ("Success" for 0, &lt;reason> for != 0), and a newDailyStorage object where the processed data is appended.
+
+  // Check for errors in JSON.
+  for (const [key, value] of Object.entries(data)) {
+    if (value == null)
+      return {
+        status_code: 1,
+        message: `ERROR: Missing value for key:${key} in the data recieved, returning original dailyStorage object.`,
+      };
+  }
+
+  const nameOfDevice = data?.deviceName;
+  if (nameOfDevice == null)
+    return {
+      status_code: 1,
+      message: "ERROR: Missing device name in .deviceName key of received object.",
+    };
+
+  delete data.deviceName; // Delete deviceName field as we don't want to commit this to daily data, it is superflous &amp; would take up storage.
+
+  if (nameOfDevice in dailyStorage &amp;&amp; Array.isArray(dailyStorage[nameOfDevice])) {
+    dailyStorage[nameOfDevice].push(data);
+  } else {
+    dailyStorage[nameOfDevice] = [data];
+  }
+
+  return { status_code: 0, message: "Data processed succesfully" };
+}
+
+function envOrDefault(KEY, defaultValue) {
+  return process.env?.[KEY] || defaultValue;
+}
+
+/**
+ * Stores a JavaScript Object, jsonData, to the local filesystem by converting it to "Stringified" JSON, saving it at the path designated by fileName.
+ * @param {Object} jsonData The JavaScript object that you want to save to the local file system.
+ * @param {String} fileName Path and/or filename to save the stringifed JSON to the file system with.
+ */
+function locallyStoreJSON(jsonData, fileName) {
+  let dailyDataString = JSON.stringify(jsonData);
+  const filePath = path.join(__dirname, fileName);
+
+  fs.writeFileSync(filePath, dailyDataString);
+}
+
+/**
+ *
+ * @param {String} fileName
+ * @returns {Aggregated_IoT_Data}
+ */
+function loadFileAsObject(fileName) {
+  try {
+    const filePath = path.join(__dirname, fileName);
+    const fileContent = fs.readFileSync(filePath);
+    const savedData = JSON.parse(fileContent);
+    return savedData;
+  } catch (err) {
+    console.log(
+      `Error reading file ${fileName}.\nError is: ${err}\nActing like there is no saved data.`
+    );
+    return {};
+  }
+}
+
+/**
+ * Deletes file with the given filename.
+ * @param {String} fileName Name of file to delete.
+ */
+function deleteFile(fileName) {
+  const filePath = path.join(__dirname, fileName);
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.log(`Error deleting file '${fileName}':`, err.message);
+    } else {
+      console.log(`File '${fileName}' has been successfully deleted.`);
+    }
+  });
+}
+
+/**
+ *
+ * @param {Aggregated_IoT_Data} originalSavedData
+ * @returns {{keep: Aggregated_IoT_Data, upload: Aggregated_IoT_Data}} filteredData Object with two entries, keep and upload, where keep is the Object to keep and Upload contains the JSON that should be uploaded to IPFS to persist, as it is old data.
+ */
+function filterData(originalSavedData) {
+  const keep = {};
+  const upload = {};
+  for (const [key, val] of Object.entries(originalSavedData)) {
+    if (Array.isArray(val) &amp;&amp; isTodaysDate(new Date(val[0]?.time).toISOString().slice(0, 10)))
+      keep[key] = val;
+    else upload[key] = val;
+  }
+  return { keep, upload };
+}
+
+/**
+ * Returns true if the given ISO date is todays date.
+ * @param {Date} date
+ * @returns {Boolean}
+ */
+function isTodaysDate(date) {
+  const todaysDate = new Date().toISOString().slice(0, 10);
+  return date === todaysDate;
+}
+
+const utils = {
+  processDataInput,
+  envOrDefault,
+  locallyStoreJSON,
+  loadFileAsObject,
+  deleteFile,
+  filterData,
+};
+
+module.exports = utils;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decryptToPlainText">decryptToPlainText</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#encryptPlainText">encryptPlainText</a></li><li><a href="global.html#filterData">filterData</a></li><li><a href="global.html#gatewayAPI">gatewayAPI</a></li><li><a href="global.html#isTodaysDate">isTodaysDate</a></li><li><a href="global.html#loadFileAsObject">loadFileAsObject</a></li><li><a href="global.html#locallyStoreJSON">locallyStoreJSON</a></li><li><a href="global.html#newGrpcConnection">newGrpcConnection</a></li><li><a href="global.html#newIdentity">newIdentity</a></li><li><a href="global.html#newSigner">newSigner</a></li><li><a href="global.html#processDataInput">processDataInput</a></li><li><a href="global.html#uploadDataAsAsset">uploadDataAsAsset</a></li><li><a href="global.html#uploadToIPFS">uploadToIPFS</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Aug 15 2023 23:30:20 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
