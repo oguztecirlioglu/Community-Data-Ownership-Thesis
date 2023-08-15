@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"ipfscc/mocks"
 	"os"
 	"testing"
@@ -106,6 +107,26 @@ func TestUploadKeyPrivate(t *testing.T) {
 	assert.Equal(t, expectedPrivateDataBytes, privateDataBytes)
 }
 
+func TestGetKeyPrivateData(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	expectedKeyAsset := KeyCIDAsset{
+		Date:         testDataDate,
+		DeviceName:   testDeviceName,
+		IPFS_CID:     testCID,
+		SymmetricKey: testEncryptionKey,
+	}
+	expectedKeyAssetBytes, _ := json.Marshal(expectedKeyAsset)
+
+	chaincodeStub.GetPrivateDataReturns(expectedKeyAssetBytes, nil)
+
+	// Expects assetKey to be in format of <deviceName>_<date>
+	keyAsset, err := assetTransferCC.GetKeyPrivateData(transactionContext, testDeviceName+"_"+testDataDate)
+	assert.NoError(t, err)
+	assert.Equal(t, keyAsset.SymmetricKey, testEncryptionKey)
+}
+
 func TestGetMyOrgsDataAssets(t *testing.T) {
 	// Test if it returns nothing, since data isn't owned by my org
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
@@ -159,6 +180,37 @@ func TestGetMyOrgsDataAssets(t *testing.T) {
 
 	assert.Equal(t, len(assets), 1)
 	assert.IsType(t, []*DataAsset{}, assets)
+}
+
+func TestTransferEncKey(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	testNewOwnerOrg := "newOwnerOrg"
+
+	asset := DataAsset{
+		AssetName: testDeviceName,
+		Date:      testDataDate,
+		IPFS_CID:  testCID,
+		OwnerOrg:  "anotherOrgsData",
+	}
+	assetBytes, _ := json.Marshal(asset)
+	chaincodeStub.GetStateReturnsOnCall(0, assetBytes, nil)
+
+	symmetricKeyBytes := []byte(testEncryptionKey)
+	assetPropMap := map[string][]byte{
+		"symmetricKey": symmetricKeyBytes,
+	}
+	chaincodeStub.GetTransientReturns(assetPropMap, nil)
+
+	err := assetTransferCC.TransferEncKey(transactionContext, testNewOwnerOrg, testDeviceName, testDataDate)
+	assert.NoError(t, err)
+
+	_, _, argBytes := chaincodeStub.PutPrivateDataArgsForCall(0)
+	var argData KeyCIDAsset
+	json.Unmarshal(argBytes, &argData)
+	assert.Equal(t, argData.IPFS_CID, testCID)
+	assert.Equal(t, argData.SymmetricKey, testEncryptionKey)
 }
 
 func TestGetOtherOrgsDataAssets(t *testing.T) {
@@ -216,6 +268,95 @@ func TestGetOtherOrgsDataAssets(t *testing.T) {
 	assert.IsType(t, []*DataAsset{}, assets)
 }
 
+func TestGetAllDataAssets(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+	sampleOtherOrgName := "anotherOrg"
+	mockIterator := getMockStateByRangeIterator(sampleOtherOrgName)
+
+	chaincodeStub.GetStateByRangeReturns(mockIterator, nil)
+
+	allAssets, err := assetTransferCC.GetAllDataAssets(transactionContext)
+	assert.NoError(t, err)
+	assert.IsType(t, allAssets, []*DataAsset{})
+	assert.Equal(t, allAssets[0].OwnerOrg, sampleOtherOrgName)
+}
+
+func TestGetAssetOwner(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	expectedAsset := DataAsset{
+		AssetName: testDeviceName,
+		Date:      testDataDate,
+		IPFS_CID:  testCID,
+		OwnerOrg:  myOrg1Msp,
+	}
+	expectedAssetBytes, _ := json.Marshal(expectedAsset)
+
+	chaincodeStub.GetStateReturnsOnCall(0, expectedAssetBytes, nil)
+
+	assetOwner, err := assetTransferCC.GetAssetOwner(transactionContext, testDeviceName, testDataDate)
+
+	assert.NoError(t, err)
+	assert.Equal(t, assetOwner, myOrg1Msp)
+}
+
+func TestGetAssetByID(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	expectedAsset := DataAsset{
+		AssetName: testDeviceName,
+		Date:      testDataDate,
+		IPFS_CID:  testCID,
+		OwnerOrg:  myOrg1Msp,
+	}
+	expectedAssetBytes, _ := json.Marshal(expectedAsset)
+
+	chaincodeStub.GetStateReturnsOnCall(0, expectedAssetBytes, nil)
+
+	mockAssetId := testDeviceName + "_" + testDataDate
+	asset, err := assetTransferCC.GetAssetByID(transactionContext, mockAssetId)
+	assert.NoError(t, err)
+	getStateArgsForCall := chaincodeStub.GetStateArgsForCall(0)
+	assert.Equal(t, getStateArgsForCall, "data_"+mockAssetId)
+	assert.Equal(t, asset.OwnerOrg, myOrg1Msp)
+}
+
+func TestGetBidsForMyOrg(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	const testBidPrice = "999"
+	const biddingOrg = "biddingOrg"
+
+	expectedBid := DataBid{
+		AdditionalCommitments: "",
+		BiddingOrg:            biddingOrg,
+		CurrentOwnerOrg:       myOrg1Msp,
+		DeviceName:            testDeviceName,
+		Date:                  testDataDate,
+		Price:                 testBidPrice,
+		Active:                true,
+	}
+	expectedBidBytes, _ := json.Marshal(expectedBid)
+
+	mockIterator := &mocks.StateQueryIterator{}
+	mockIterator.HasNextReturnsOnCall(0, true)
+	mockIterator.HasNextReturnsOnCall(1, false)
+	mockIterator.NextReturns(&queryresult.KV{Value: expectedBidBytes}, nil)
+
+	chaincodeStub.GetStateByRangeReturns(mockIterator, nil)
+
+	bidsForMyOrg, err := assetTransferCC.GetBidsForMyOrg(transactionContext)
+	argOne, argTwo := chaincodeStub.GetStateByRangeArgsForCall(0)
+	assert.NoError(t, err)
+	assert.Equal(t, bidsForMyOrg[0].Price, testBidPrice)
+	assert.Equal(t, argOne, "bid_")
+	assert.Equal(t, argTwo, "bid_~")
+}
+
 func TestAcceptBid(t *testing.T) {
 	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
 	assetTransferCC := SmartContract{}
@@ -235,7 +376,17 @@ func TestAcceptBid(t *testing.T) {
 	}
 	expectedBidBytes, _ := json.Marshal(expectedBid)
 
-	chaincodeStub.GetStateReturns(expectedBidBytes, nil)
+	chaincodeStub.GetStateReturnsOnCall(0, expectedBidBytes, nil)
+
+	expectedAsset := DataAsset{
+		AssetName: testDeviceName,
+		Date:      testDataDate,
+		IPFS_CID:  testCID,
+		OwnerOrg:  myOrg1Msp,
+	}
+	expectedAssetBytes, _ := json.Marshal(expectedAsset)
+
+	chaincodeStub.GetStateReturnsOnCall(1, expectedAssetBytes, nil)
 
 	mockIterator := &mocks.StateQueryIterator{}
 	mockIterator.HasNextReturnsOnCall(0, true)
@@ -246,7 +397,78 @@ func TestAcceptBid(t *testing.T) {
 	// bidBytes, err := chaincodeStub.GetState(expectedbidID)
 
 	err := assetTransferCC.AcceptBid(transactionContext, biddingOrg, testDeviceName, testDataDate, testBidPrice)
-	require.NoError(t, err)
+	assert.NoError(t, err)
+	_, newDataAssetBytes := chaincodeStub.PutStateArgsForCall(1)
+
+	var newDataAsset DataAsset
+	err = json.Unmarshal(newDataAssetBytes, &newDataAsset)
+	fmt.Println(newDataAsset)
+	assert.NoError(t, err)
+	assert.Equal(t, biddingOrg, newDataAsset.OwnerOrg)
+}
+
+func TestBidForData(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	const testBidPrice = "1001"
+	const testBidCommitments = "no commitments"
+	const otherOwnerOrg = "otherOwnerOrg"
+
+	expectedAsset := DataAsset{
+		AssetName: testDeviceName,
+		Date:      testDataDate,
+		IPFS_CID:  testCID,
+		OwnerOrg:  otherOwnerOrg,
+	}
+	expectedAssetBytes, _ := json.Marshal(expectedAsset)
+
+	chaincodeStub.GetStateReturnsOnCall(0, expectedAssetBytes, nil)
+
+	err := assetTransferCC.BidForData(transactionContext, testDeviceName, testDataDate, testBidPrice, testBidCommitments)
+	assert.NoError(t, err)
+
+	_, putStateArgBytes := chaincodeStub.PutStateArgsForCall(0)
+	var putStateArg DataBid
+	err = json.Unmarshal(putStateArgBytes, &putStateArg)
+	assert.NoError(t, err)
+	assert.True(t, putStateArg.Active)
+	assert.Equal(t, putStateArg.BiddingOrg, myOrg1Msp)
+}
+
+func TestInactivateAllBidsForThisData(t *testing.T) {
+	transactionContext, chaincodeStub := prepMocks(myOrg1Msp, myOrg1Clientid)
+	assetTransferCC := SmartContract{}
+
+	const testBidPrice = "1001"
+	const biddingOrg = "biddingOrg"
+
+	expectedBid := DataBid{
+		AdditionalCommitments: "",
+		BiddingOrg:            biddingOrg,
+		CurrentOwnerOrg:       myOrg1Msp,
+		DeviceName:            testDeviceName,
+		Date:                  testDataDate,
+		Price:                 testBidPrice,
+		Active:                true,
+	}
+	expectedBidBytes, _ := json.Marshal(expectedBid)
+
+	mockIterator := &mocks.StateQueryIterator{}
+	mockIterator.HasNextReturnsOnCall(0, true)
+	mockIterator.HasNextReturnsOnCall(1, false)
+	mockIterator.NextReturns(&queryresult.KV{Value: expectedBidBytes}, nil)
+
+	chaincodeStub.GetStateByRangeReturns(mockIterator, nil)
+
+	err := assetTransferCC.InactivateAllBidsForThisData(transactionContext, myOrg1Msp, testDeviceName, testDataDate)
+	assert.NoError(t, err)
+
+	_, putStateBytes := chaincodeStub.PutStateArgsForCall(0)
+	var putState DataBid
+	err = json.Unmarshal(putStateBytes, &putState)
+	assert.NoError(t, err)
+	assert.False(t, putState.Active)
 }
 
 func prepMocks(orgMSP, clientId string) (*mocks.TransactionContext, *mocks.ChaincodeStub) {
@@ -261,4 +483,21 @@ func prepMocks(orgMSP, clientId string) (*mocks.TransactionContext, *mocks.Chain
 	os.Setenv("CORE_PEER_LOCALMSPID", orgMSP)
 	transactionContext.GetClientIdentityReturns(clientIdentity)
 	return transactionContext, chaincodeStub
+}
+
+func getMockStateByRangeIterator(ownerOrg string) *mocks.StateQueryIterator {
+	asset := DataAsset{
+		AssetName: testDeviceName,
+		Date:      testDataDate,
+		IPFS_CID:  testCID,
+		OwnerOrg:  ownerOrg,
+	}
+	assetBytes, _ := json.Marshal(asset)
+
+	mockIterator := &mocks.StateQueryIterator{}
+	mockIterator.HasNextReturnsOnCall(0, true)
+	mockIterator.HasNextReturnsOnCall(1, false)
+	mockIterator.NextReturns(&queryresult.KV{Value: assetBytes}, nil)
+
+	return mockIterator
 }

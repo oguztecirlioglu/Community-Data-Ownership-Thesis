@@ -10,15 +10,6 @@ beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
-// test("Renders Org Asset Data Properly From Mock Data", async () => {
-//   render(<App />);
-//   const AssetName = await waitFor(() => screen.queryAllByText(/Virtual_IoT_Device_1070/i));
-//   const AssetCID = await waitFor(() =>
-//     screen.queryAllByText("QmQC73RJZiSaBxS9WgHF3t2gpG17BuZL9oKuBEHnvzkCy3")
-//   );
-//   expect(AssetName && AssetCID).toBeTruthy();
-// });
-
 describe("Should render all the titles for all data fields when app is started", () => {
   it("Renders the main app title", async () => {
     render(<App />);
