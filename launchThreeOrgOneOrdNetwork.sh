@@ -3,20 +3,21 @@ function echoln() {
     echo -e "$1"
 }
 
+Red='\033[0;31m'    # Red
+Green='\033[0;32m'  # Green
+Blue='\033[0;34m'   # Blue
+Color_Off='\033[0m' # Text Reset
+
 function succesln() {
-    Green='\033[0;32m'  # Green
-    Color_Off='\033[0m' # Text Reset
-    echoln "${Green} $1 ${Color_Off}"
+    echoln "${Green}$1${Color_Off}"
 }
 
 function failln() {
-    Red='\033[0;31m'    # Green
-    Color_Off='\033[0m' # Text Reset
-    echoln "${Red} $1 ${Color_Off}"
+    echoln "${Red}$1${Color_Off}"
 }
 
 if [ -z "$1" ]; then
-    echoln "No argument supplied, please specify \"up\" to bring up the network or \"down\" to bring down the network."
+    echoln "No argument supplied, please specify ${Blue}\"up\"${Color_Off} to bring up the network, ${Blue}\"down\"${Color_Off} to bring down the ENTIRE network, or ${Blue}\"kill-gateway\"${Color_Off}"
     exit 1
 fi
 
@@ -124,4 +125,18 @@ if [ "$1" = "down" ]; then
 
     succesln "\n\nNetwork brought down successfully\n\n"
     exit 0
+fi
+
+if [ "$1" = "kill-gateway" ]; then
+    echoln "\nKilling the Local Gateway process!\n"
+    pidGateway=$(ps aux | grep node | grep "localGateway" | awk '{print $2}')
+    if [ -z "$pidGateway"]; then
+        failln "Local Gateway process does not seem to be running anyways. Exiting..."
+        exit 1
+    else
+        echo "PID of Gateway: $pidGateway"
+        kill $pidGateway
+        succesln "\nKilled Local Gateway successfully\n\n"
+        exit 0
+    fi
 fi

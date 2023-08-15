@@ -8,7 +8,7 @@ function envOrDefault(KEY, defaultValue) {
  * @param {number} randomnessAmount - A number in [-5, 25] that determines how random the fake readings are.
  * @param {String} deviceName - Name of the IoT device producing the data.
  */
-function generateRandomData(randomnessAmount, deviceName) {
+function generateRandomData(randomnessAmount, deviceName, sendOldData) {
   if (randomnessAmount < -5) randomnessAmount = -5;
   if (randomnessAmount > 25) randomnessAmount = 25;
 
@@ -35,8 +35,7 @@ function generateRandomData(randomnessAmount, deviceName) {
   // tvoc limit=https://asbp.org.uk/wp-content/uploads/2020/03/Sani-Dimitroulopoulou-Public-Health-England-ASBP-Healthy-Buildings-2020.pdf
 
   return {
-    time: new Date().toISOString(),
-    // time: new Date(Date.now() - 86400000).toISOString(),
+    time: sendOldData ? new Date(Date.now() - 86400000).toISOString() : new Date().toISOString(),
     deviceName: deviceName,
     temperature: {
       unit: "celsius",

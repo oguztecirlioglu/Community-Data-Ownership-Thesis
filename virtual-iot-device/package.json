@@ -7,7 +7,8 @@
     "test": "npx jest",
     "testCoverage": "npx jest --coverage",
     "generateDocs": "./node_modules/.bin/jsdoc *.js",
-    "start": "node virtualDevice.js"
+    "start": "node virtualDevice.js",
+    "start:sendOldData": "export VIRTUAL_DEVICE_INTERVAL_SECONDS=0.2 && export VIRTUAL_DEVICE_SEND_OLD_DATA=true && node virtualDevice.js & vdPid=$! && sleep 1 && kill $vdPid"
   },
   "author": "Oguz Tecirlioglu <ot398@bath.ac.uk>",
   "license": "ISC",

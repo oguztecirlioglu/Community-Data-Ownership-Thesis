@@ -22,7 +22,8 @@ const DEVICE_NAME = utils.envOrDefault(
   `Virtual_IoT_Device_${Math.floor(Math.random() * 9000) + 1000}` // Generate random 4 digit number to be reasonably sure the name is unique if we don't provide it in the config.
 );
 
-let lastJSONArray = [];
+/** @global */
+const SEND_YESTERDAYS_DATA = utils.envOrDefault("VIRTUAL_DEVICE_SEND_OLD_DATA", false);
 
 /**
  * Async method that sends randomly generated data to the API endpoint which was configured by reading environment variables.
@@ -41,6 +42,9 @@ async function sendData(API_ENDPOINT, API_PORT, data) {
 }
 
 function printConfigVariables() {
+  if (SEND_YESTERDAYS_DATA)
+    console.log(`**** SENDING OLD DATA, UPLOADED IMMEDIATELY TO NETWORK **** \n`);
+
   console.log(`*** DEVICE NAME: ${DEVICE_NAME}`);
   console.log(`*** API ENDPOINT: ${API_ENDPOINT}`);
   console.log(`*** API PORT: ${API_PORT}`);
@@ -51,7 +55,11 @@ if (require.main === module) {
   printConfigVariables();
 
   setInterval(() => {
-    const randomData = utils.generateRandomData(RANDOMNESS_AMOUNT, DEVICE_NAME);
+    const randomData = utils.generateRandomData(
+      RANDOMNESS_AMOUNT,
+      DEVICE_NAME,
+      SEND_YESTERDAYS_DATA
+    );
     sendData(API_ENDPOINT, API_PORT, randomData);
   }, INTERVAL_SECONDS * 1000);
 }
