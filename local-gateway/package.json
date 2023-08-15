@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest",
+    "coverage": "npx jest --coverage",
     "generateDocs": "./node_modules/.bin/jsdoc *.js",
     "start:org1": "dotenv -e org1config.env node localGateway.js",
     "start:org2": "dotenv -e org2config.env node localGateway.js",
