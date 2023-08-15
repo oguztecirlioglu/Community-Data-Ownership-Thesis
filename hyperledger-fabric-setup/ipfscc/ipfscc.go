@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -64,7 +63,6 @@ func (s *SmartContract) GetAssetOwner(ctx contractapi.TransactionContextInterfac
 	}
 	return assetJSON.OwnerOrg, nil
 }
-
 
 // GetAssetByID, assetID is: <assetName>_<date>,
 func (s *SmartContract) GetAssetByID(ctx contractapi.TransactionContextInterface, assetId string) (*DataAsset, error) {

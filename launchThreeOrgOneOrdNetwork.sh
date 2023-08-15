@@ -20,8 +20,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+composeFileName="threeClusters.yaml"
+
 if [ "$1" = "up" ]; then
-    composeFileName="threeClusters.yaml"
 
     echoln "\n\nBringing network up!"
 
