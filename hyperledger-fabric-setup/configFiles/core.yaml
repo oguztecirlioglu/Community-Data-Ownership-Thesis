@@ -487,12 +487,11 @@ peer:
       # gatewayService limits concurrent requests to gateway service that handles the submission and evaluation of transactions.
       gatewayService: 500
 
-  # Since all nodes should be consistent it is recommended to keep
-  # the default value of 100MB for MaxRecvMsgSize & MaxSendMsgSize
-  # Max message size in bytes GRPC server and client can receive
-  maxRecvMsgSize: 204857600
+
+  # Max message size was increased from 100MB to around 400MB, as the chaincode does not fit into 100MB.
+  maxRecvMsgSize: 404857600
   # Max message size in bytes GRPC server and client can send
-  maxSendMsgSize: 204857600
+  maxSendMsgSize: 404857600
 
 ###############################################################################
 #

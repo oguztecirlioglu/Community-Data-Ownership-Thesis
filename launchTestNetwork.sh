@@ -130,7 +130,7 @@ fi
 if [ "$1" = "kill-gateway" ]; then
     echoln "\nKilling the Local Gateway process!\n"
     pidGateway=$(ps aux | grep node | grep "localGateway" | awk '{print $2}')
-    if [ -z "$pidGateway"]; then
+    if [ -z "$pidGateway" ]; then
         failln "Local Gateway process does not seem to be running anyways. Exiting..."
         exit 1
     else

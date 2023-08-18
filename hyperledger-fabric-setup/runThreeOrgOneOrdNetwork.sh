@@ -126,6 +126,9 @@ function checkAndThrowError() {
 }
 
 if [ "$1" = "down" ]; then
+  export DOCKER_HOST="unix:///run/user/1000/docker.sock"
+  export SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
+  export DOCKER_SOCK="${SOCK##unix://}"
   echoln "\n\nBringing network down!\n\n"
   docker compose -f ./compose/docker-compose.yaml -f ./compose/docker-compose-org2.yaml -f ./compose/docker-compose-org3.yaml down
   rm -rf container-data channel-artifacts
@@ -168,8 +171,10 @@ setGeneralVars
 ### GENERATE ORGS & RUN DOCKER NETWORK
 ###
 
-SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
-DOCKER_SOCK="${SOCK##unix://}"
+## Might have to change docker_host - permissions around the docker.sock file are variable across docker installations.
+export DOCKER_HOST="unix:///run/user/1000/docker.sock"
+export SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
+export DOCKER_SOCK="${SOCK##unix://}"
 
 docker compose -f ./compose/docker-compose.yaml -f ./compose/docker-compose-org2.yaml -f ./compose/docker-compose-org3.yaml down
 

@@ -7,6 +7,7 @@ const fabricGatewayClient = require("./fabricGatewayClient");
 const crypto = require("crypto");
 const { default: axios } = require("axios");
 const path = require("path");
+const zlib = require("zlib");
 
 const app = express();
 app.use(express.json());
@@ -197,16 +198,14 @@ async function main() {
         );
         const ciphertext = response.data;
         const symmetricKeyBase64 = privateKeyCIDAsset?.symmetricKey;
+        const symmetricKey = Buffer.from(symmetricKeyBase64, "base64");
+        const plaintext = ipfsUtils.decryptToPlainText(ciphertext, symmetricKey);
 
-        const decipher = crypto.createDecipheriv(
-          "aes-256-ecb",
-          Buffer.from(symmetricKeyBase64, "base64"),
-          null
+        const dataAssetJSON = JSON.parse(
+          zlib.inflateSync(Buffer.from(plaintext, "base64")).toString("utf8")
         );
-        let plaintext = decipher.update(ciphertext, "base64", "utf8");
-        plaintext += decipher.final("utf8");
 
-        res.status(200).send(JSON.parse(plaintext));
+        res.status(200).send(dataAssetJSON);
       } catch (error) {
         console.error("***Error getting asset data: ", error.message);
         res.status(500).send(`Errro getting asset data: ${error.message}`);

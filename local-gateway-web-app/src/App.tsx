@@ -5,7 +5,7 @@ import ErrorPage from "./ErrorPage";
 import React from "react";
 import DataPage from "./DataPage";
 
-export default function AppCopy() {
+export default function App() {
   const [myOrgName, setMyOrgName] = React.useState<null | string>("Loading org...");
   const [bidsForMyOrg, setBidsForMyOrg] = React.useState<null | any>(null);
   const [assetData, setAssetData] = React.useState<null | { data: any }>(null);

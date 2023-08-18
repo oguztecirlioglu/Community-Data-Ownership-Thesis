@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "jsdoc": "^4.0.2",
     "msw": "^1.2.3",
     "node-fetch": "^3.3.2"
   }

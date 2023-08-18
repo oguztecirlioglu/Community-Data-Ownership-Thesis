@@ -1,5 +1,6 @@
 const axios = require("axios");
 const crypto = require("crypto");
+const zlib = require("zlib");
 
 require("./jsDocTypes");
 
@@ -18,7 +19,8 @@ async function uploadToIPFS(dataToUpload, ipfsClusterApiPort) {
   console.log(`\n\nUploading data for IoT Device ${Object.values(dataToUpload)[0]}`);
 
   const symmetricKey = generateSymmetricKey();
-  const cipherText = encryptPlainText(JSON.stringify(dataToUpload), symmetricKey);
+  const compressedData = zlib.deflateSync(JSON.stringify(dataToUpload)).toString("base64");
+  const cipherText = encryptPlainText(compressedData, symmetricKey);
 
   const data = new FormData();
   data.append("json", cipherText);
@@ -70,7 +72,7 @@ function encryptPlainText(plaintext, key) {
  *
  * @param {String} ciphertext
  * @param {*} key
- * @returns {Object} plainText
+ * @returns {String} plainText
  */
 function decryptToPlainText(ciphertext, key) {
   const decipher = crypto.createDecipheriv("aes-256-ecb", key, null);
@@ -78,9 +80,9 @@ function decryptToPlainText(ciphertext, key) {
   let plaintext = decipher.update(ciphertext, "base64", "utf8");
   plaintext += decipher.final("utf8");
 
-  return JSON.parse(plaintext);
+  return plaintext;
 }
 
-const ipfsUtils = { uploadToIPFS };
+const ipfsUtils = { uploadToIPFS, decryptToPlainText };
 
 module.exports = ipfsUtils;
