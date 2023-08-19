@@ -62,11 +62,19 @@ if [ "$1" = "up" ]; then
     echoln "\nNow bringing up the gateway server and gateway web app."
 
     pushd local-gateway
+
+    npm install &
+    wait $!
+
     npm run start:org1 >/dev/null 2>&1 &
     pidGateway=$!
     popd
 
     pushd local-gateway-web-app
+
+    npm install &
+    wait $!
+
     npm run start >/dev/null 2>&1 &
     pidWebapp=$!
     popd
