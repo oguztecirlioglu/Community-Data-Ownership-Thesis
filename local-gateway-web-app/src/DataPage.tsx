@@ -140,7 +140,7 @@ export default function DataPage(props: {
                   style={{ textTransform: "none" }}
                   onClick={() => setBidFormOpen(true)}
                 >
-                  {"Bid for data, currently putting a arbitrary price"}
+                  {"Bid For Data?"}
                 </Button>
               )}
             </Tooltip>
