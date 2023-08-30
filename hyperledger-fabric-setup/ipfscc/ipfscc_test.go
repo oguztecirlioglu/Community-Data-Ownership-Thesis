@@ -1,3 +1,11 @@
+/*
+Official documentation of Hyperledger Fabric does not say much about writing unit tests for smart contracts written in Golang.
+However, we were able to find and reference some unit tests in the sample projects repository, for which we provide a reference below:
+
+- https://github.com/hyperledger/fabric-samples/tree/main/asset-transfer-private-data/chaincode-go/chaincode
+
+*/
+
 package main
 
 import (

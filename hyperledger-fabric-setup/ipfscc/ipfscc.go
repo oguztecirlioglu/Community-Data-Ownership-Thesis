@@ -1,3 +1,13 @@
+/* 
+Parts of this chaincode were inspired by the sample smart contracts provided by the Hyperledger Fabric community.
+In particular, chaincode at the following locations were referenced extensively:
+
+- https://github.com/hyperledger/fabric-samples/tree/main/asset-transfer-basic
+- https://github.com/hyperledger/fabric-samples/tree/main/asset-transfer-private-data
+- https://github.com/hyperledger/fabric-samples/tree/main/auction-dutch
+
+*/
+
 package main
 
 import (

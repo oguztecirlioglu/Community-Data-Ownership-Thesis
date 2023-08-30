@@ -1,3 +1,11 @@
+/*
+Aspects of this script were inspired from the office samples provided by the Hyperledger Fabric community from their TypeScript based
+Application Gateway component that connects to a Peer service and invokes chaincode.
+This sample is made available below:
+https://github.com/hyperledger/fabric-samples/tree/main/asset-transfer-basic/application-gateway-typescript 
+
+*/ 
+
 const express = require("express");
 const cors = require("cors");
 require("./jsDocTypes");
