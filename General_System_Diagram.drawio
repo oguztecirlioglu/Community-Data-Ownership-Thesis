@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-08-30T14:40:02.705Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="06X47loND1rGTXFbhL2f" version="21.6.9" type="github">
+<mxfile host="app.diagrams.net" modified="2023-08-30T14:40:49.508Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="sWiKiFHmCq6W4uitxsPs" version="21.6.9" type="github">
   <diagram name="Page-1" id="aklOrfjd24qqs5W9E0Lq">
     <mxGraphModel dx="3287" dy="539" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
       <root>
@@ -647,11 +647,11 @@
             <mxPoint x="166.00153846153853" y="94.96499999999992" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="_ihj-CWu3pPbsuvW4py6-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=default;strokeColor=#FFFFFF;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=classic;strokeWidth=3;" edge="1" parent="_ihj-CWu3pPbsuvW4py6-35" source="_ihj-CWu3pPbsuvW4py6-10" target="_ihj-CWu3pPbsuvW4py6-3">
+        <mxCell id="_ihj-CWu3pPbsuvW4py6-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=default;strokeColor=#FFFFFF;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=classic;strokeWidth=3;startArrow=classic;startFill=1;" edge="1" parent="_ihj-CWu3pPbsuvW4py6-35" source="_ihj-CWu3pPbsuvW4py6-10" target="_ihj-CWu3pPbsuvW4py6-3">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="337" y="357" />
-              <mxPoint x="457" y="357" />
+              <mxPoint x="336" y="357" />
+              <mxPoint x="417" y="357" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -664,7 +664,7 @@
         <mxCell id="_ihj-CWu3pPbsuvW4py6-21" value="&lt;b style=&quot;border-color: var(--border-color); font-family: Helvetica; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;&lt;font&gt;&lt;font style=&quot;border-color: var(--border-color); font-size: 16px;&quot;&gt;Hyperledger Fabric Peer&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/font&gt;Data Management Layer&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Helvetica;fontColor=#FFFFFF;labelBackgroundColor=none;" vertex="1" parent="_ihj-CWu3pPbsuvW4py6-22">
           <mxGeometry width="189" height="42" as="geometry" />
         </mxCell>
-        <mxCell id="_ihj-CWu3pPbsuvW4py6-24" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=default;strokeColor=#FFFFFF;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=classic;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=3;" edge="1" parent="_ihj-CWu3pPbsuvW4py6-35" source="_ihj-CWu3pPbsuvW4py6-21" target="_ihj-CWu3pPbsuvW4py6-3">
+        <mxCell id="_ihj-CWu3pPbsuvW4py6-24" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=default;strokeColor=#FFFFFF;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=classic;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=3;startArrow=classic;startFill=1;" edge="1" parent="_ihj-CWu3pPbsuvW4py6-35" source="_ihj-CWu3pPbsuvW4py6-21" target="_ihj-CWu3pPbsuvW4py6-3">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="686" y="357" />
