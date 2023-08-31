@@ -11,18 +11,14 @@ import {
 } from "@mui/material";
 import React from "react";
 
-export default function BidForm(props: {
-  deviceName: string;
-  date: string;
-  bidForDataFunc: any;
-  setBidFormOpenFunc: any;
-}) {
+export default function BidForm(props: { deviceName: string; date: string; bidForDataFunc: any }) {
   const theme = useTheme();
   const dividerColor = theme.palette.divider;
   const [price, setPrice] = React.useState("");
   const [additionalCommitments, setAdditionalCommitments] = React.useState("");
+  const [formOpen, setFormOpen] = React.useState(false);
 
-  return (
+  return formOpen ? (
     <Card sx={{ border: 2, borderColor: dividerColor, boxShadow: 0 }}>
       <CardContent>
         <Grid container spacing={2}>
@@ -30,7 +26,7 @@ export default function BidForm(props: {
             <Typography>Add information to your bid:</Typography>
           </Grid>
           <Grid item xs={3} sx={{ display: "flex", justifyContent: "right" }}>
-            <IconButton aria-label="close" onClick={() => props.setBidFormOpenFunc(false)}>
+            <IconButton aria-label="close" onClick={() => setFormOpen(false)}>
               <CloseIcon />
             </IconButton>
           </Grid>
@@ -63,7 +59,7 @@ export default function BidForm(props: {
                   additionalCommitments
                 );
                 if (res.ok) {
-                  props.setBidFormOpenFunc(false);
+                  setFormOpen(false);
                   alert("Bid submitted successfully");
                 } else {
                   alert("Failed to submit bid!" + res.statusText);
@@ -77,5 +73,9 @@ export default function BidForm(props: {
         </Grid>
       </CardContent>
     </Card>
+  ) : (
+    <Button variant="contained" style={{ textTransform: "none" }} onClick={() => setFormOpen(true)}>
+      {"Bid For Data?"}
+    </Button>
   );
 }

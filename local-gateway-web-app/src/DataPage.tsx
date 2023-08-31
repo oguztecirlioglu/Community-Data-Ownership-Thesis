@@ -30,7 +30,6 @@ export default function DataPage(props: {
   assetData: any;
 }) {
   const gridRef = React.useRef<any>();
-  const [bidFormOpen, setBidFormOpen] = React.useState(false);
 
   const theme = useTheme();
 
@@ -127,22 +126,11 @@ export default function DataPage(props: {
             <Tooltip
               title={`Bid for data: ${assetObject?.assetName} at the IPFS address: ${assetObject?.IPFS_CID}`}
             >
-              {bidFormOpen ? (
-                <BidForm
-                  setBidFormOpenFunc={setBidFormOpen}
-                  bidForDataFunc={bidForData}
-                  deviceName={assetObject.assetName}
-                  date={assetObject.date}
-                />
-              ) : (
-                <Button
-                  variant="contained"
-                  style={{ textTransform: "none" }}
-                  onClick={() => setBidFormOpen(true)}
-                >
-                  {"Bid For Data?"}
-                </Button>
-              )}
+              <BidForm
+                bidForDataFunc={bidForData}
+                deviceName={assetObject.assetName}
+                date={assetObject.date}
+              />
             </Tooltip>
           )}
         </CardContent>
